@@ -1,0 +1,253 @@
+#cat=comfort,fuel,performance,
+#query=comfortable,decent gas mileage,good overall performance;8324
+#query=comfortable,good gas mileage,good performance;8325
+#query=very comfortable,good fuel economy,good performance;8326
+#query=comfortable,decent gas mileage,good performance;8327
+#query=extremely comfortable,good gas mileage,good overall performance;8328
+#query=comfortable,decent fuel economy,good performance;8329
+#query=extremely comfortable,good fuel economy,good overall performance;8330
+#query=very comfortable,decent gas mileage,good performance;8331
+#query=comfortable,good fuel economy,good performance;8332
+#query=very comfortable,good fuel economy,good overall performance;8333
+#query=extremely comfortable,good fuel economy,good performance;8334
+#query=very comfortable,decent fuel economy,good overall performance;8335
+#query=comfortable,good fuel economy,good overall performance;8336
+#query=very comfortable,decent fuel economy,good performance;8337
+#query=extremely comfortable,decent gas mileage,good performance;8338
+#query=extremely comfortable,decent gas mileage,good overall performance;8339
+#query=very comfortable,good gas mileage,good overall performance;8340
+#query=very comfortable,decent gas mileage,good overall performance;8341
+#query=extremely comfortable,decent fuel economy,good overall performance;8342
+#query=comfortable,good gas mileage,good overall performance;8343
+#query=extremely comfortable,good gas mileage,good performance;8344
+#query=comfortable,decent fuel economy,good overall performance;8345
+#query=very comfortable,good gas mileage,good performance;8346
+#query=extremely comfortable,decent fuel economy,good performance;8347
+#judge
+2007_audi_a8;9.61
+2007_nissan_altima_hybrid;9.453333333333333
+2007_kia_amanti;9.35
+2007_audi_rs4;9.270000000000001
+2007_bmw_5_series;9.256666666666668
+2007_toyota_camry_hybrid;9.226666666666667
+2007_volkswagen_eos;9.209999999999999
+2007_toyota_yaris;9.186666666666666
+2007_chevrolet_corvette;9.14
+2007_volkswagen_gti;9.096666666666666
+2007_lexus_es_350;9.083333333333334
+2007_mercedes-benz_gl-class;9.08
+2007_mercedes-benz_e-class;9.07
+2007_volvo_s80;9.056666666666667
+2007_nissan_350z;9.05
+2007_lexus_gs_350;9.003333333333332
+2007_lexus_gs_450h;9.0
+2007_mercedes-benz_s-class;8.973333333333334
+2007_mini_cooper;8.973333333333334
+2007_gmc_sierra_2500hd;8.956666666666665
+2007_audi_a6;8.950000000000001
+2007_lexus_rx_350;8.946666666666667
+2007_lexus_is_350;8.946666666666665
+2007_pontiac_g5;8.946666666666665
+2007_lexus_is_250;8.943333333333333
+2007_hyundai_elantra;8.923333333333334
+2007_lexus_ls_460;8.923333333333334
+2007_honda_s2000;8.916666666666666
+2007_saturn_aura;8.910000000000002
+2007_ford_escape_hybrid;8.909999999999998
+2007_toyota_avalon;8.903333333333334
+2007_mercedes-benz_cls-class;8.893333333333333
+2007_mitsubishi_outlander;8.89
+2007_acura_tsx;8.88
+2007_mazda_mx-5_miata;8.876666666666667
+2007_mercedes-benz_m-class;8.870000000000001
+2007_chevrolet_hhr;8.863333333333335
+2007_cadillac_sts;8.863333333333333
+2007_mazda_mazdaspeed_mazda3;8.86
+2007_toyota_prius;8.846666666666668
+2007_acura_rl;8.846666666666666
+2007_volvo_v70;8.846666666666666
+2007_pontiac_vibe;8.843333333333334
+2007_mitsubishi_endeavor;8.833333333333334
+2007_bmw_3_series;8.823333333333332
+2007_ford_fusion;8.823333333333332
+2007_chevrolet_monte_carlo;8.82
+2007_ford_freestyle;8.81
+2007_mitsubishi_eclipse_spyder;8.806666666666667
+2007_kia_sedona;8.793333333333333
+2007_gmc_envoy;8.790000000000001
+2007_toyota_camry_solara;8.790000000000001
+2007_kia_spectra;8.776666666666666
+2007_ford_expedition;8.770000000000001
+2007_hyundai_azera;8.77
+2007_pontiac_solstice;8.766666666666667
+2007_buick_rainier;8.74
+2007_mitsubishi_eclipse;8.733333333333333
+2007_ford_five_hundred;8.73
+2007_toyota_matrix;8.73
+2007_acura_tl;8.729999999999999
+2007_honda_fit;8.726666666666667
+2007_mazda_mazda3;8.716666666666667
+2007_audi_a3;8.713333333333333
+2007_mazda_cx-9;8.713333333333333
+2007_suzuki_sx4;8.703333333333333
+2007_dodge_charger;8.700000000000001
+2007_bmw_z4;8.693333333333333
+2007_nissan_murano;8.683333333333334
+2007_infiniti_m45;8.680000000000001
+2007_audi_a4;8.68
+2007_volkswagen_passat;8.676666666666668
+2007_nissan_altima;8.67
+2007_lexus_gx_470;8.666666666666666
+2007_hyundai_sonata;8.653333333333334
+2007_volvo_s60;8.653333333333334
+2007_chrysler_pacifica;8.646666666666667
+2007_honda_accord;8.646666666666667
+2007_hyundai_veracruz;8.643333333333333
+2007_toyota_tundra;8.643333333333333
+2007_saturn_sky;8.63
+2007_honda_civic;8.623333333333333
+2007_chrysler_aspen;8.613333333333335
+2007_gmc_sierra_1500;8.613333333333332
+2007_chevrolet_avalanche;8.603333333333333
+2007_honda_cr-v;8.593333333333334
+2007_toyota_fj_cruiser;8.593333333333334
+2007_toyota_corolla;8.590000000000002
+2007_subaru_legacy;8.583333333333334
+2007_ford_escape;8.58
+2007_toyota_highlander_hybrid;8.58
+2007_mitsubishi_galant;8.576666666666666
+2007_volkswagen_touareg;8.573333333333332
+2007_mazda_mazda6;8.57
+2007_nissan_armada;8.57
+2007_volvo_xc90;8.566666666666668
+2007_acura_mdx;8.566666666666666
+2007_chevrolet_malibu;8.566666666666666
+2007_ford_shelby_gt500;8.556666666666667
+2007_chevrolet_silverado_2500hd_classic;8.543333333333333
+2007_mercedes-benz_sl-class;8.530000000000001
+2007_honda_element;8.526666666666666
+2007_lexus_rx_400h;8.526666666666666
+2007_chevrolet_equinox;8.523333333333333
+2007_hyundai_santa_fe;8.516666666666667
+2007_toyota_4runner;8.513333333333334
+2007_volvo_v50;8.51
+2007_nissan_pathfinder;8.503333333333334
+2007_audi_s8;8.5
+2007_ford_edge;8.496666666666668
+2007_mercedes-benz_r-class;8.493333333333334
+2007_toyota_tacoma;8.493333333333334
+2007_nissan_titan;8.49
+2007_toyota_rav4;8.49
+2007_ford_explorer_sport_trac;8.476666666666667
+2007_mazda_mazdaspeed_mazda6;8.476666666666667
+2007_ford_focus;8.473333333333334
+2007_nissan_sentra;8.473333333333334
+2007_hyundai_tucson;8.47
+2007_gmc_sierra_1500_classic;8.469999999999999
+2007_subaru_outback;8.459999999999999
+2007_cadillac_escalade_ext;8.450000000000001
+2007_nissan_frontier;8.446666666666667
+2007_infiniti_g35;8.443333333333333
+2007_mazda_mazda5;8.436666666666666
+2007_mercedes-benz_c-class;8.426666666666668
+2007_chevrolet_cobalt;8.42
+2007_kia_sportage;8.416666666666666
+2007_chrysler_300;8.396666666666667
+2007_dodge_magnum;8.396666666666667
+2007_nissan_versa;8.396666666666667
+2007_toyota_sienna;8.396666666666667
+2007_chevrolet_tahoe;8.393333333333333
+2007_infiniti_fx35;8.39
+2007_chevrolet_trailblazer;8.386666666666665
+2007_pontiac_grand_prix;8.386666666666665
+2007_toyota_sequoia;8.383333333333333
+2007_subaru_b9_tribeca;8.38
+2007_kia_rondo;8.376666666666667
+2007_volkswagen_new_beetle;8.376666666666665
+2007_gmc_acadia;8.373333333333333
+2007_suzuki_xl7;8.373333333333333
+2007_scion_tc;8.37
+2007_volkswagen_rabbit;8.346666666666666
+2007_cadillac_cts;8.343333333333334
+2007_chevrolet_silverado_1500;8.343333333333334
+2007_chevrolet_impala;8.333333333333334
+2007_saturn_outlook;8.33
+2007_hyundai_tiburon;8.326666666666668
+2007_kia_sorento;8.326666666666666
+2007_cadillac_escalade_esv;8.32
+2007_bmw_x3;8.313333333333334
+2007_buick_rendezvous;8.29
+2007_chrysler_crossfire;8.283333333333333
+2007_ford_mustang;8.276666666666666
+2007_mercedes-benz_clk-class;8.276666666666666
+2007_buick_lucerne;8.27
+2007_chevrolet_silverado_1500_classic;8.27
+2007_suzuki_grand_vitara;8.269999999999998
+2007_honda_ridgeline;8.263333333333334
+2007_acura_rdx;8.26
+2007_jeep_patriot;8.256666666666666
+2007_ford_expedition_el;8.246666666666668
+2007_gmc_yukon_xl;8.24
+2007_ford_taurus;8.226666666666667
+2007_jeep_compass;8.223333333333334
+2007_cadillac_dts;8.216666666666667
+2007_volkswagen_jetta;8.213333333333333
+2007_buick_lacrosse;8.196666666666667
+2007_ford_f-150;8.19
+2007_dodge_ram_pickup_1500;8.17
+2007_saturn_ion;8.139999999999999
+2007_hyundai_accent;8.133333333333335
+2007_subaru_impreza;8.13
+2007_gmc_yukon;8.126666666666667
+2007_pontiac_g6;8.12
+2007_dodge_ram_pickup_2500;8.116666666666667
+2007_pontiac_torrent;8.113333333333335
+2007_nissan_xterra;8.113333333333333
+2007_hyundai_entourage;8.106666666666667
+2007_volvo_s40;8.106666666666667
+2007_honda_pilot;8.083333333333334
+2007_infiniti_m35;8.083333333333334
+2007_audi_q7;8.08
+2007_saturn_vue;8.049999999999999
+2007_chevrolet_malibu_maxx;8.046666666666667
+2007_dodge_ram_pickup_3500;8.046666666666667
+2007_mercedes-benz_slk-class;8.03
+2007_volvo_xc70;8.023333333333333
+2007_dodge_caliber;8.016666666666667
+2007_mazda_rx-8;8.016666666666666
+2007_subaru_forester;8.013333333333334
+2007_toyota_camry;8.003333333333332
+2007_chevrolet_suburban;7.993333333333333
+2007_nissan_maxima;7.986666666666667
+2007_cadillac_escalade;7.983333333333333
+2007_bmw_6_series;7.98
+2007_chevrolet_silverado_2500hd;7.9799999999999995
+2007_volvo_c70;7.963333333333334
+2007_cadillac_srx;7.95
+2007_nissan_quest;7.919999999999999
+2007_kia_optima;7.8566666666666665
+2007_ford_ranger;7.853333333333333
+2007_bmw_x5;7.84
+2007_mazda_cx-7;7.833333333333333
+2007_ford_explorer;7.829999999999999
+2007_dodge_caravan;7.793333333333334
+2007_mitsubishi_raider;7.793333333333334
+2007_chevrolet_aveo;7.793333333333333
+2007_toyota_highlander;7.79
+2007_chrysler_sebring;7.726666666666667
+2007_honda_odyssey;7.683333333333334
+2007_jeep_wrangler;7.656666666666666
+2007_jeep_liberty;7.586666666666667
+2007_dodge_grand_caravan;7.510000000000001
+2007_kia_rio;7.47
+2007_suzuki_reno;7.46
+2007_jeep_commander;7.413333333333334
+2007_chevrolet_colorado;7.386666666666667
+2007_dodge_nitro;7.353333333333333
+2007_dodge_durango;7.273333333333333
+2007_chrysler_town_and_country;7.206666666666667
+2007_jeep_grand_cherokee;7.123333333333334
+2007_gmc_canyon;7.0633333333333335
+2007_chevrolet_uplander;7.003333333333334
+2007_suzuki_forenza;6.93
+2007_chrysler_pt_cruiser;6.800000000000001
