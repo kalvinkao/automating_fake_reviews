@@ -13,3 +13,4 @@
 # limitations under the License.
 # ==============================================================================
 from trainer import model
+from trainer import util
