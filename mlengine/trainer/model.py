@@ -405,7 +405,7 @@ class Model(object):
             outputs = {"y": tf.saved_model.utils.build_tensor_info(y)}
             predict_signature_def = signature_def_utils.build_signature_def(
                     outputs=outputs, 
-                    signature_constants.PREDICT_METHOD_NAME)
+                    method_name=signature_constants.PREDICT_METHOD_NAME)
             
             build = builder.SavedModelBuilder(os.path.join(output_dir, 'saved_model'))
             build.add_meta_graph_and_variables(
