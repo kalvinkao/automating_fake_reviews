@@ -12,17 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from setuptools import find_packages
 from setuptools import setup
 
-REQUIRED_PACKAGES = [
-]
+if __name__ == '__main__':
+  setup(name='trainer', packages=['trainer'])
 
-setup(
-    name='baseline_defense',
-    version='0.1',
-    install_requires=REQUIRED_PACKAGES,
-    packages=find_packages(),
-    include_package_data=True,
-    requires=[]
-)
+#from setuptools import find_packages
+#from setuptools import setup
+
+#REQUIRED_PACKAGES = [
+#]
+
+#setup(
+    #name='baseline_defense',
+    #version='0.1',
+    #install_requires=REQUIRED_PACKAGES,
+    #packages=find_packages(),
+    #include_package_data=True,
+    #requires=[]
+#)
