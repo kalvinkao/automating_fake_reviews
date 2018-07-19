@@ -12,7 +12,8 @@ from __future__ import division
 
 #import json, os, re, shutil, sys, time
 import os, shutil, time
-from importlib import reload
+#from importlib import reload
+from imp import reload
 #import collections, itertools
 #import unittest
 from trainer import unittest
