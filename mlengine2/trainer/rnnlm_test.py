@@ -5,9 +5,13 @@ from __future__ import division
 #import rnnlm
 
 #from w266_common import vocabulary, utils
-#from trainer import vocabulary, utils, rnnlm
+#from trainer import vocabulary, utils, rnnlm, unittest
 #from . import vocabulary, utils, rnnlm, unittest
-import vocabulary, utils, rnnlm, unittest
+#import vocabulary, utils, rnnlm, unittest
+import trainer.vocabulary as vocabulary
+import trainer.utils as utils
+import trainer.rnnlm as rnnlm
+import trainer.unittest as unittest
 
 #import copy
 import numpy as np

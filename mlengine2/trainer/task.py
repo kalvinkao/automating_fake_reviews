@@ -18,7 +18,7 @@ from imp import reload
 #import unittest
 #from trainer import unittest
 #from . import unittest
-import unittest
+import trainer.unittest as unittest
 #from IPython.display import display, HTML
 
 # NLTK for NLP utils and corpora
@@ -31,16 +31,20 @@ assert(tf.__version__.startswith("1."))
 
 # Helper libraries
 #from trainer import utils#, vocabulary, tf_embed_viz
-import utils
+#import utils
+import trainer.utils as utils
 
 # rnnlm code
-#from trainer import rnnlm; reload(rnnlm)
-#from trainer import rnnlm_test; reload(rnnlm_test)
+#from trainer import rnnlm
+import trainer.rnnlm as rnnlm
+reload(rnnlm)
+#from trainer import rnnlm_test
+import trainer.rnnlm_test as rnnlm_test
+reload(rnnlm_test)
 #from . import rnnlm; reload(rnnlm)
 #from . import rnnlm_test; reload(rnnlm_test)
-import rnnlm; reload(rnnlm)
-import rnnlm_test; reload(rnnlm_test)
-
+#import rnnlm; reload(rnnlm)
+#import rnnlm_test; reload(rnnlm_test)
 # packages for extracting data
 import pandas as pd
 

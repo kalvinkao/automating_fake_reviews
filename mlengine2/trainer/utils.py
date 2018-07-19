@@ -12,7 +12,8 @@ from IPython.display import display, HTML
 
 #from . import constants
 #from trainer import constants
-import constants
+#import constants
+import trainer.constants as constants
 
 ##
 # Package and module utils
