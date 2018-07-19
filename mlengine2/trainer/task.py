@@ -39,8 +39,8 @@ import trainer.utils as utils
 import trainer.rnnlm as rnnlm
 reload(rnnlm)
 #from trainer import rnnlm_test
-import trainer.rnnlm_test as rnnlm_test
-reload(rnnlm_test)
+#import trainer.rnnlm_test as rnnlm_test
+#reload(rnnlm_test)
 #from . import rnnlm; reload(rnnlm)
 #from . import rnnlm_test; reload(rnnlm_test)
 #import rnnlm; reload(rnnlm)
