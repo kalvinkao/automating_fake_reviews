@@ -5,13 +5,14 @@ from __future__ import division
 #import rnnlm
 
 #from w266_common import vocabulary, utils
-from trainer import vocabulary, utils, rnnlm
+#from trainer import vocabulary, utils, rnnlm
+from . import vocabulary, utils, rnnlmm, unittest
 
 #import copy
 import numpy as np
 import tensorflow as tf
 
-import unittest
+#import unittest
 
 
 class TestRNNLMCore(unittest.TestCase):

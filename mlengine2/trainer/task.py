@@ -16,7 +16,8 @@ import os, shutil, time
 from imp import reload
 #import collections, itertools
 #import unittest
-from trainer import unittest
+#from trainer import unittest
+from . import unittest
 #from IPython.display import display, HTML
 
 # NLTK for NLP utils and corpora
@@ -31,8 +32,10 @@ assert(tf.__version__.startswith("1."))
 from trainer import utils#, vocabulary, tf_embed_viz
 
 # rnnlm code
-from trainer import rnnlm; reload(rnnlm)
-from trainer import rnnlm_test; reload(rnnlm_test)
+#from trainer import rnnlm; reload(rnnlm)
+#from trainer import rnnlm_test; reload(rnnlm_test)
+from . import rnnlm; reload(rnnlm)
+from . import rnnlm_test; reload(rnnlm_test)
 
 # packages for extracting data
 import pandas as pd
