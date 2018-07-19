@@ -48,6 +48,8 @@ reload(rnnlm)
 # packages for extracting data
 import pandas as pd
 
+#
+#import cloudstorage as gcs
 
 def make_tensorboard(tf_graphdir="/tmp/artificial_hotel_reviews/a4_graph", V=100, H=1024, num_layers=2):
     reload(rnnlm)
@@ -353,9 +355,15 @@ def train_attack_model(training_samples=20000, test_samples=1000, review_path = 
     trained_filename = run_training(train_ids, test_ids, tf_savedir = "/tmp/artificial_hotel_reviews/a4_model", model_params=model_params, max_time=300, batch_size=256, learning_rate=0.002, num_epochs=1)
     return trained_filename, model_params, words_to_ids, ids_to_words
 
+#get data from gcs
+review_path = 'gs://w266_final_project_kk/data/review.csv'
+os.system('gsutil cp gs://w266_final_project_kk/data/review.csv /tmp/projectdata/')
+#gsutil cp gs://[BUCKET_NAME]/[OBJECT_NAME] [OBJECT_DESTINATION]
+review_path = '/tmp/projectdata/review.csv'
+
 trained_filename, model_params, words_to_ids, ids_to_words = train_attack_model(training_samples=20000, 
                                                                                 test_samples=5000, 
-                                                                                review_path = 'gs://w266_final_project_kk/data/review.csv')
+                                                                                review_path = review_path)
 
 generate_text(trained_filename, model_params, words_to_ids, ids_to_words)
 
