@@ -8,7 +8,7 @@ import numpy as np
 
 # For pretty-printing
 import pandas as pd
-from IPython.display import display, HTML
+#from IPython.display import display, HTML
 
 #from . import constants
 #from trainer import constants
