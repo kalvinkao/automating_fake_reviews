@@ -343,7 +343,7 @@ def train_attack_model(training_samples=20000, test_samples=1000, review_path = 
 
 trained_filename, model_params, words_to_ids, ids_to_words = train_attack_model(training_samples=20000, 
                                                                                 test_samples=5000, 
-                                                                                review_path = '/home/kalvin_kao/yelp_challenge_dataset/review.csv')
+                                                                                review_path = 'gs://w266_final_project_kk/data/review.csv')
 
 generate_text(trained_filename, model_params, words_to_ids, ids_to_words)
 
