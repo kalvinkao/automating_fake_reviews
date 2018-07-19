@@ -357,7 +357,7 @@ def train_attack_model(training_samples=20000, test_samples=1000, review_path = 
 
 #get data from gcs
 review_path = 'gs://w266_final_project_kk/data/review.csv'
-os.system('gsutil cp gs://w266_final_project_kk/data/review.csv /tmp/projectdata/')
+os.system('gsutil -m -q cp -r gs://w266_final_project_kk/data/review.csv /tmp/projectdata')
 #gsutil cp gs://[BUCKET_NAME]/[OBJECT_NAME] [OBJECT_DESTINATION]
 review_path = '/tmp/projectdata/review.csv'
 
