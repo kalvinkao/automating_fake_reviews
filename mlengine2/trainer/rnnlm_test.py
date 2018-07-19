@@ -6,7 +6,8 @@ from __future__ import division
 
 #from w266_common import vocabulary, utils
 #from trainer import vocabulary, utils, rnnlm
-from . import vocabulary, utils, rnnlmm, unittest
+#from . import vocabulary, utils, rnnlm, unittest
+import vocabulary, utils, rnnlm, unittest
 
 #import copy
 import numpy as np

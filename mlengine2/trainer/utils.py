@@ -10,8 +10,9 @@ import numpy as np
 import pandas as pd
 from IPython.display import display, HTML
 
-from . import constants
+#from . import constants
 #from trainer import constants
+import constants
 
 ##
 # Package and module utils

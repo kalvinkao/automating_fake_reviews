@@ -5,7 +5,8 @@
 
 #import unittest
 #from . import utils
-from . import unittest, utils, vocabulary
+#from . import unittest, utils, vocabulary
+import unittest, utils, vocabulary
 
 import nltk
 import numpy as np

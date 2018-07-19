@@ -17,7 +17,8 @@ from imp import reload
 #import collections, itertools
 #import unittest
 #from trainer import unittest
-from . import unittest
+#from . import unittest
+import unittest
 #from IPython.display import display, HTML
 
 # NLTK for NLP utils and corpora
@@ -29,13 +30,16 @@ import tensorflow as tf
 assert(tf.__version__.startswith("1."))
 
 # Helper libraries
-from trainer import utils#, vocabulary, tf_embed_viz
+#from trainer import utils#, vocabulary, tf_embed_viz
+import utils
 
 # rnnlm code
 #from trainer import rnnlm; reload(rnnlm)
 #from trainer import rnnlm_test; reload(rnnlm_test)
-from . import rnnlm; reload(rnnlm)
-from . import rnnlm_test; reload(rnnlm_test)
+#from . import rnnlm; reload(rnnlm)
+#from . import rnnlm_test; reload(rnnlm_test)
+import rnnlm; reload(rnnlm)
+import rnnlm_test; reload(rnnlm_test)
 
 # packages for extracting data
 import pandas as pd
