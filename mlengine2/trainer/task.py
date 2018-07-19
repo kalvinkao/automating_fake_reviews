@@ -15,10 +15,10 @@ import os, shutil, time
 #from importlib import reload
 from imp import reload
 #import collections, itertools
-#import unittest
+import unittest
 #from trainer import unittest
 #from . import unittest
-import trainer.unittest as unittest
+#import trainer.unittest as unittest
 #from IPython.display import display, HTML
 
 # NLTK for NLP utils and corpora

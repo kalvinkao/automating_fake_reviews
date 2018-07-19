@@ -11,7 +11,7 @@ from __future__ import division
 import trainer.vocabulary as vocabulary
 import trainer.utils as utils
 import trainer.rnnlm as rnnlm
-import trainer.unittest as unittest
+import unittest
 
 #import copy
 import numpy as np
