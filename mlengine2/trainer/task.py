@@ -301,8 +301,8 @@ def sample_step(lm, session, input_w, initial_h):
 def generate_text(trained_filename, model_params, words_to_ids, ids_to_words):
     # Same as above, but as a batch
     #max_steps = 20
-    max_steps = 50
-    num_samples = 10
+    max_steps = 150
+    num_samples = 100
     random_seed = 42
     
     lm = rnnlm.RNNLM(**model_params)
@@ -342,11 +342,14 @@ def train_attack_model(training_samples=20000, test_samples=1000, review_path = 
     #training_samples=20000
     #test_samples=1000
     #review_path = '/home/kalvin_kao/yelp_challenge_dataset/review.csv'
+    start_format = time.time()
     five_star_reviews = get_review_series(review_path)
     train_review_list, test_review_list = make_train_test_data(five_star_reviews, training_samples, test_samples)
     words_to_ids, ids_to_words = make_vocabulary(train_review_list, test_review_list)
     train_ids = convert_to_ids(words_to_ids, train_review_list)
     test_ids = convert_to_ids(words_to_ids, test_review_list)
+    end_format = time.time()
+    print("data formatting took " + str(end_format-start_format) + " seconds")
     model_params = dict(V=len(words_to_ids.keys()), 
                             H=1024, 
                             softmax_ns=len(words_to_ids.keys()),
@@ -357,7 +360,10 @@ def train_attack_model(training_samples=20000, test_samples=1000, review_path = 
 
 #get data from gcs
 review_path = 'gs://w266_final_project_kk/data/review.csv'
+start_dl = time.time()
 os.system('gsutil -q cp gs://w266_final_project_kk/data/review.csv .')
+end_dl = time.time()
+print("review.csv download took " + str(end_dl-start_dl) + " seconds")
 #gsutil cp gs://[BUCKET_NAME]/[OBJECT_NAME] [OBJECT_DESTINATION]
 review_path = './review.csv'
 
