@@ -172,8 +172,8 @@ def make_train_test_data(five_star_review_series, training_samples=20000, test_s
     #fix randomization to prevent evaluation on trained samples
     review_list = preprocess_review_series(five_star_review_series)
     #split and shuffle the data
-    train_len = np.floor(0.8*len(review_list))
-    test_len = np.floor(0.2*len(review_list))
+    train_len = int(np.floor(0.8*len(review_list)))
+    test_len = int(np.floor(0.2*len(review_list)))
     np.random.shuffle(review_list)
     training_review_list = review_list[:train_len]
     testing_review_list = review_list[-test_len:]
