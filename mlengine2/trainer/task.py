@@ -50,6 +50,7 @@ import pandas as pd
 
 #
 #import cloudstorage as gcs
+import random
 
 def make_tensorboard(tf_graphdir="/tmp/artificial_hotel_reviews/a4_graph", V=100, H=1024, num_layers=2):
     reload(rnnlm)
@@ -168,12 +169,22 @@ def get_business_list(business_path = '/home/kalvin_kao/yelp_challenge_dataset/b
     return pd.read_csv(business_path)
 
 def make_train_test_data(five_star_review_series, training_samples=20000, test_samples=1000):
-    #add randomization
+    #fix randomization to prevent evaluation on trained samples
     review_list = preprocess_review_series(five_star_review_series)
-    training_review_list = [item for sublist in review_list[:training_samples] for item in sublist]
+    #split and shuffle the data
+    train_len = np.floor(0.8*len(review_list))
+    test_len = np.floor(0.2*len(review_list))
+    np.random.shuffle(review_list)
+    training_review_list = review_list[:train_len]
+    testing_review_list = review_list[-test_len:]
+    randomized_training_list = random.sample(training_review_list, training_samples)
+    randomized_testing_list = random.sample(testing_review_list, test_samples)
+    #training_review_list = [item for sublist in review_list[:training_samples] for item in sublist]
+    training_review_list = [item for sublist in randomized_training_list for item in sublist]
     print(len(training_review_list))
     
-    test_review_list = [item for sublist in review_list[training_samples:training_samples+test_samples] for item in sublist]
+    #test_review_list = [item for sublist in review_list[training_samples:training_samples+test_samples] for item in sublist]
+    test_review_list = [item for sublist in randomized_testing_list for item in sublist]
     return training_review_list, test_review_list
 
 def make_vocabulary(training_review_list, test_review_list):
@@ -233,7 +244,7 @@ def run_training(train_ids, test_ids, tf_savedir, model_params, max_time=100, ba
     
     with tf.Session(graph=lm.graph) as session:
         # Seed RNG for repeatability
-        tf.set_random_seed(42)
+        #tf.set_random_seed(42)
     
         session.run(initializer)
         
@@ -302,7 +313,7 @@ def generate_text(trained_filename, model_params, words_to_ids, ids_to_words):
     # Same as above, but as a batch
     #max_steps = 20
     max_steps = 150
-    num_samples = 100
+    num_samples = 10
     random_seed = 42
     
     lm = rnnlm.RNNLM(**model_params)
@@ -314,7 +325,7 @@ def generate_text(trained_filename, model_params, words_to_ids, ids_to_words):
     
     with tf.Session(graph=lm.graph) as session:
         # Seed RNG for repeatability
-        tf.set_random_seed(random_seed)
+        #tf.set_random_seed(random_seed)
         
         # Load the trained model
         saver.restore(session, trained_filename)
@@ -355,7 +366,7 @@ def train_attack_model(training_samples=20000, test_samples=1000, review_path = 
                             softmax_ns=len(words_to_ids.keys()),
                             num_layers=2)
     #run_training(train_ids, test_ids, tf_savedir, model_params, max_time=100, batch_size=256, learning_rate=0.002, num_epochs=20)
-    trained_filename = run_training(train_ids, test_ids, tf_savedir = "/tmp/artificial_hotel_reviews/a4_model", model_params=model_params, max_time=300, batch_size=256, learning_rate=0.002, num_epochs=1)
+    trained_filename = run_training(train_ids, test_ids, tf_savedir = "/tmp/artificial_hotel_reviews/a4_model", model_params=model_params, max_time=150, batch_size=256, learning_rate=0.002, num_epochs=3)
     return trained_filename, model_params, words_to_ids, ids_to_words
 
 #get data from gcs
@@ -367,11 +378,14 @@ print("review.csv download took " + str(end_dl-start_dl) + " seconds")
 #gsutil cp gs://[BUCKET_NAME]/[OBJECT_NAME] [OBJECT_DESTINATION]
 review_path = './review.csv'
 
-trained_filename, model_params, words_to_ids, ids_to_words = train_attack_model(training_samples=20000, 
-                                                                                test_samples=5000, 
+trained_filename, model_params, words_to_ids, ids_to_words = train_attack_model(training_samples=50000, 
+                                                                                test_samples=12500, 
                                                                                 review_path = review_path)
 
 generate_text(trained_filename, model_params, words_to_ids, ids_to_words)
 
 #test_graph()
 #test_training()
+#save_command = "gsutil -q cp " + trained_filename + " gs://w266_final_project_kk/" + time.strftime("%a, %d %b %Y %H:%M:%S", time.gmtime())
+save_command = "gsutil -q cp " + trained_filename + " gs://w266_final_project_kk/" + str(int(np.floor(time.time())))
+os.system(save_command)

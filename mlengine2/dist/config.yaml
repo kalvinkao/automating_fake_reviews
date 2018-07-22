@@ -3,5 +3,5 @@ trainingInput:
   masterType: complex_model_l
   workerType: complex_model_l
   parameterServerType: complex_model_l
-  workerCount: 8
-  parameterServerCount: 24
+  workerCount: 13
+  parameterServerCount: 5

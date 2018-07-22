@@ -18,7 +18,7 @@ REQUIRED_PACKAGES = [
 
 setup(
     name='trainer',
-    version='0.1.1',
+    version='0.1.2',
     install_requires=REQUIRED_PACKAGES,
     packages=find_packages(),
     include_package_data=True,
