@@ -1,0 +1,282 @@
+[
+  {
+    "insertId": "1qpplzbfxbu0e8",
+    "logName": "projects/muthderd-w266-000001/logs/ml.googleapis.com%2Fbaseline_test_complex_model_l_03",
+    "receiveTimestamp": "2018-07-23T06:24:20.877281021Z",
+    "resource": {
+      "labels": {
+        "job_id": "baseline_test_complex_model_l_03",
+        "project_id": "muthderd-w266-000001",
+        "task_name": "service"
+      },
+      "type": "ml_job"
+    },
+    "severity": "INFO",
+    "textPayload": "Job cancelled.",
+    "timestamp": "2018-07-23T06:24:20.877281021Z"
+  },
+  {
+    "insertId": "ajkzzofypzmnm",
+    "logName": "projects/muthderd-w266-000001/logs/ml.googleapis.com%2Fbaseline_test_complex_model_l_03",
+    "receiveTimestamp": "2018-07-23T06:23:25.147919244Z",
+    "resource": {
+      "labels": {
+        "job_id": "baseline_test_complex_model_l_03",
+        "project_id": "muthderd-w266-000001",
+        "task_name": "service"
+      },
+      "type": "ml_job"
+    },
+    "severity": "INFO",
+    "textPayload": "Finished tearing down training program.",
+    "timestamp": "2018-07-23T06:23:25.147919244Z"
+  },
+  {
+    "insertId": "t5b3rlfxpbcrq",
+    "jsonPayload": {
+      "created": 1532326906.792662,
+      "levelname": "INFO",
+      "lineno": 949,
+      "message": "Clean up finished.",
+      "pathname": "/runcloudml.py"
+    },
+    "labels": {
+      "compute.googleapis.com/resource_id": "8662718140838200454",
+      "compute.googleapis.com/resource_name": "cmle-training-worker-9780a94e1c-9-txmgj",
+      "compute.googleapis.com/zone": "us-central1-c",
+      "ml.googleapis.com/job_id": "baseline_test_complex_model_l_03",
+      "ml.googleapis.com/job_id/log_area": "root",
+      "ml.googleapis.com/task_name": "worker-replica-9",
+      "ml.googleapis.com/trial_id": ""
+    },
+    "logName": "projects/muthderd-w266-000001/logs/worker-replica-9",
+    "receiveTimestamp": "2018-07-23T06:21:52.216096033Z",
+    "resource": {
+      "labels": {
+        "job_id": "baseline_test_complex_model_l_03",
+        "project_id": "muthderd-w266-000001",
+        "task_name": "worker-replica-9"
+      },
+      "type": "ml_job"
+    },
+    "severity": "INFO",
+    "timestamp": "2018-07-23T06:21:46.792661905Z"
+  },
+  {
+    "insertId": "t5b3rlfxpbcrp",
+    "jsonPayload": {
+      "created": 1532326906.792321,
+      "levelname": "INFO",
+      "lineno": 946,
+      "message": "Module completed; cleaning up.",
+      "pathname": "/runcloudml.py"
+    },
+    "labels": {
+      "compute.googleapis.com/resource_id": "8662718140838200454",
+      "compute.googleapis.com/resource_name": "cmle-training-worker-9780a94e1c-9-txmgj",
+      "compute.googleapis.com/zone": "us-central1-c",
+      "ml.googleapis.com/job_id": "baseline_test_complex_model_l_03",
+      "ml.googleapis.com/job_id/log_area": "root",
+      "ml.googleapis.com/task_name": "worker-replica-9",
+      "ml.googleapis.com/trial_id": ""
+    },
+    "logName": "projects/muthderd-w266-000001/logs/worker-replica-9",
+    "receiveTimestamp": "2018-07-23T06:21:52.216096033Z",
+    "resource": {
+      "labels": {
+        "job_id": "baseline_test_complex_model_l_03",
+        "project_id": "muthderd-w266-000001",
+        "task_name": "worker-replica-9"
+      },
+      "type": "ml_job"
+    },
+    "severity": "INFO",
+    "timestamp": "2018-07-23T06:21:46.792320966Z"
+  },
+  {
+    "insertId": "t5b3rlfxpbcro",
+    "jsonPayload": {
+      "created": 1532326906.791249,
+      "levelname": "INFO",
+      "lineno": 756,
+      "message": "Signal 15 (SIGTERM) was caught. Terminated by service. This is normal behavior.",
+      "pathname": "/runcloudml.py"
+    },
+    "labels": {
+      "compute.googleapis.com/resource_id": "8662718140838200454",
+      "compute.googleapis.com/resource_name": "cmle-training-worker-9780a94e1c-9-txmgj",
+      "compute.googleapis.com/zone": "us-central1-c",
+      "ml.googleapis.com/job_id": "baseline_test_complex_model_l_03",
+      "ml.googleapis.com/job_id/log_area": "root",
+      "ml.googleapis.com/task_name": "worker-replica-9",
+      "ml.googleapis.com/trial_id": ""
+    },
+    "logName": "projects/muthderd-w266-000001/logs/worker-replica-9",
+    "receiveTimestamp": "2018-07-23T06:21:52.216096033Z",
+    "resource": {
+      "labels": {
+        "job_id": "baseline_test_complex_model_l_03",
+        "project_id": "muthderd-w266-000001",
+        "task_name": "worker-replica-9"
+      },
+      "type": "ml_job"
+    },
+    "severity": "INFO",
+    "timestamp": "2018-07-23T06:21:46.791249036Z"
+  },
+  {
+    "insertId": "32fwcnfxiylng",
+    "jsonPayload": {
+      "created": 1532326906.787002,
+      "levelname": "INFO",
+      "lineno": 949,
+      "message": "Clean up finished.",
+      "pathname": "/runcloudml.py"
+    },
+    "labels": {
+      "compute.googleapis.com/resource_id": "1465712112322888839",
+      "compute.googleapis.com/resource_name": "cmle-training-worker-9780a94e1c-8-qkhbm",
+      "compute.googleapis.com/zone": "us-central1-c",
+      "ml.googleapis.com/job_id": "baseline_test_complex_model_l_03",
+      "ml.googleapis.com/job_id/log_area": "root",
+      "ml.googleapis.com/task_name": "worker-replica-8",
+      "ml.googleapis.com/trial_id": ""
+    },
+    "logName": "projects/muthderd-w266-000001/logs/worker-replica-8",
+    "receiveTimestamp": "2018-07-23T06:21:52.129631001Z",
+    "resource": {
+      "labels": {
+        "job_id": "baseline_test_complex_model_l_03",
+        "project_id": "muthderd-w266-000001",
+        "task_name": "worker-replica-8"
+      },
+      "type": "ml_job"
+    },
+    "severity": "INFO",
+    "timestamp": "2018-07-23T06:21:46.787002086Z"
+  },
+  {
+    "insertId": "32fwcnfxiylnf",
+    "jsonPayload": {
+      "created": 1532326906.786588,
+      "levelname": "INFO",
+      "lineno": 946,
+      "message": "Module completed; cleaning up.",
+      "pathname": "/runcloudml.py"
+    },
+    "labels": {
+      "compute.googleapis.com/resource_id": "1465712112322888839",
+      "compute.googleapis.com/resource_name": "cmle-training-worker-9780a94e1c-8-qkhbm",
+      "compute.googleapis.com/zone": "us-central1-c",
+      "ml.googleapis.com/job_id": "baseline_test_complex_model_l_03",
+      "ml.googleapis.com/job_id/log_area": "root",
+      "ml.googleapis.com/task_name": "worker-replica-8",
+      "ml.googleapis.com/trial_id": ""
+    },
+    "logName": "projects/muthderd-w266-000001/logs/worker-replica-8",
+    "receiveTimestamp": "2018-07-23T06:21:52.129631001Z",
+    "resource": {
+      "labels": {
+        "job_id": "baseline_test_complex_model_l_03",
+        "project_id": "muthderd-w266-000001",
+        "task_name": "worker-replica-8"
+      },
+      "type": "ml_job"
+    },
+    "severity": "INFO",
+    "timestamp": "2018-07-23T06:21:46.786587953Z"
+  },
+  {
+    "insertId": "32fwcnfxiylne",
+    "jsonPayload": {
+      "created": 1532326906.78543,
+      "levelname": "INFO",
+      "lineno": 756,
+      "message": "Signal 15 (SIGTERM) was caught. Terminated by service. This is normal behavior.",
+      "pathname": "/runcloudml.py"
+    },
+    "labels": {
+      "compute.googleapis.com/resource_id": "1465712112322888839",
+      "compute.googleapis.com/resource_name": "cmle-training-worker-9780a94e1c-8-qkhbm",
+      "compute.googleapis.com/zone": "us-central1-c",
+      "ml.googleapis.com/job_id": "baseline_test_complex_model_l_03",
+      "ml.googleapis.com/job_id/log_area": "root",
+      "ml.googleapis.com/task_name": "worker-replica-8",
+      "ml.googleapis.com/trial_id": ""
+    },
+    "logName": "projects/muthderd-w266-000001/logs/worker-replica-8",
+    "receiveTimestamp": "2018-07-23T06:21:52.129631001Z",
+    "resource": {
+      "labels": {
+        "job_id": "baseline_test_complex_model_l_03",
+        "project_id": "muthderd-w266-000001",
+        "task_name": "worker-replica-8"
+      },
+      "type": "ml_job"
+    },
+    "severity": "INFO",
+    "timestamp": "2018-07-23T06:21:46.785429954Z"
+  },
+  {
+    "insertId": "ofec8ufzxpzu3",
+    "jsonPayload": {
+      "created": 1532326906.78226,
+      "levelname": "INFO",
+      "lineno": 949,
+      "message": "Clean up finished.",
+      "pathname": "/runcloudml.py"
+    },
+    "labels": {
+      "compute.googleapis.com/resource_id": "2005651104146015367",
+      "compute.googleapis.com/resource_name": "cmle-training-worker-9780a94e1c-7-mnltv",
+      "compute.googleapis.com/zone": "us-central1-c",
+      "ml.googleapis.com/job_id": "baseline_test_complex_model_l_03",
+      "ml.googleapis.com/job_id/log_area": "root",
+      "ml.googleapis.com/task_name": "worker-replica-7",
+      "ml.googleapis.com/trial_id": ""
+    },
+    "logName": "projects/muthderd-w266-000001/logs/worker-replica-7",
+    "receiveTimestamp": "2018-07-23T06:21:51.856873582Z",
+    "resource": {
+      "labels": {
+        "job_id": "baseline_test_complex_model_l_03",
+        "project_id": "muthderd-w266-000001",
+        "task_name": "worker-replica-7"
+      },
+      "type": "ml_job"
+    },
+    "severity": "INFO",
+    "timestamp": "2018-07-23T06:21:46.782259941Z"
+  },
+  {
+    "insertId": "ofec8ufzxpzu2",
+    "jsonPayload": {
+      "created": 1532326906.781913,
+      "levelname": "INFO",
+      "lineno": 946,
+      "message": "Module completed; cleaning up.",
+      "pathname": "/runcloudml.py"
+    },
+    "labels": {
+      "compute.googleapis.com/resource_id": "2005651104146015367",
+      "compute.googleapis.com/resource_name": "cmle-training-worker-9780a94e1c-7-mnltv",
+      "compute.googleapis.com/zone": "us-central1-c",
+      "ml.googleapis.com/job_id": "baseline_test_complex_model_l_03",
+      "ml.googleapis.com/job_id/log_area": "root",
+      "ml.googleapis.com/task_name": "worker-replica-7",
+      "ml.googleapis.com/trial_id": ""
+    },
+    "logName": "projects/muthderd-w266-000001/logs/worker-replica-7",
+    "receiveTimestamp": "2018-07-23T06:21:51.856873582Z",
+    "resource": {
+      "labels": {
+        "job_id": "baseline_test_complex_model_l_03",
+        "project_id": "muthderd-w266-000001",
+        "task_name": "worker-replica-7"
+      },
+      "type": "ml_job"
+    },
+    "severity": "INFO",
+    "timestamp": "2018-07-23T06:21:46.781913042Z"
+  }
+]
