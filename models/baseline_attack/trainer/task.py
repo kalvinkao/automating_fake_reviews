@@ -181,10 +181,11 @@ def make_train_test_data(five_star_review_series, training_samples=20000, test_s
     randomized_testing_list = random.sample(testing_review_list, test_samples)
     #training_review_list = [item for sublist in review_list[:training_samples] for item in sublist]
     training_review_list = [item for sublist in randomized_training_list for item in sublist]
-    print(len(training_review_list))
+    print("number of training characters", len(training_review_list))
     
     #test_review_list = [item for sublist in review_list[training_samples:training_samples+test_samples] for item in sublist]
     test_review_list = [item for sublist in randomized_testing_list for item in sublist]
+    print("number of test characters", len(test_review_list))
     return training_review_list, test_review_list
 
 def make_vocabulary(training_review_list, test_review_list):
@@ -312,8 +313,8 @@ def sample_step(lm, session, input_w, initial_h):
 def generate_text(trained_filename, model_params, words_to_ids, ids_to_words):
     # Same as above, but as a batch
     #max_steps = 20
-    max_steps = 150
-    num_samples = 10
+    max_steps = 300
+    num_samples = 10000
     random_seed = 42
     
     lm = rnnlm.RNNLM(**model_params)
@@ -366,7 +367,7 @@ def train_attack_model(training_samples=20000, test_samples=1000, review_path = 
                             softmax_ns=len(words_to_ids.keys()),
                             num_layers=2)
     #run_training(train_ids, test_ids, tf_savedir, model_params, max_time=100, batch_size=256, learning_rate=0.002, num_epochs=20)
-    trained_filename = run_training(train_ids, test_ids, tf_savedir = "/tmp/artificial_hotel_reviews/a4_model", model_params=model_params, max_time=150, batch_size=256, learning_rate=0.002, num_epochs=3)
+    trained_filename = run_training(train_ids, test_ids, tf_savedir = "/tmp/artificial_hotel_reviews/a4_model", model_params=model_params, max_time=150, batch_size=256, learning_rate=0.002, num_epochs=20)
     return trained_filename, model_params, words_to_ids, ids_to_words
 
 #get data from gcs
@@ -378,8 +379,8 @@ print("review.csv download took " + str(end_dl-start_dl) + " seconds")
 #gsutil cp gs://[BUCKET_NAME]/[OBJECT_NAME] [OBJECT_DESTINATION]
 review_path = './review.csv'
 
-trained_filename, model_params, words_to_ids, ids_to_words = train_attack_model(training_samples=50000, 
-                                                                                test_samples=12500, 
+trained_filename, model_params, words_to_ids, ids_to_words = train_attack_model(training_samples=25000, 
+                                                                                test_samples=6250, 
                                                                                 review_path = review_path)
 
 generate_text(trained_filename, model_params, words_to_ids, ids_to_words)
@@ -387,5 +388,5 @@ generate_text(trained_filename, model_params, words_to_ids, ids_to_words)
 #test_graph()
 #test_training()
 #save_command = "gsutil -q cp " + trained_filename + " gs://w266_final_project_kk/" + time.strftime("%a, %d %b %Y %H:%M:%S", time.gmtime())
-save_command = "gsutil -q cp " + trained_filename + " gs://w266_final_project_kk/" + str(int(np.floor(time.time())))
-os.system(save_command)
+#save_command = "gsutil -q cp " + trained_filename + " gs://w266_final_project_kk/" + str(int(np.floor(time.time())))
+#os.system(save_command)
