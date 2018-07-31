@@ -371,19 +371,43 @@ def train_attack_model(training_samples=20000, test_samples=1000, review_path = 
     return trained_filename, model_params, words_to_ids, ids_to_words
 
 #get data from gcs
-review_path = 'gs://w266_final_project_kk/data/review.csv'
+#review_path = 'gs://w266_final_project_kk/data/review.csv'
+#train_review_path = 'gs://w266_final_project_kk/data/split01_train_data_01.csv'
+#test_review_path = 'gs://w266_final_project_kk/data/split01_test_data_01.csv'
 start_dl = time.time()
-os.system('gsutil -q cp gs://w266_final_project_kk/data/review.csv .')
+os.system('gsutil -q cp gs://w266_final_project_kk/data/split01_train_data_01.csv .')
+os.system('gsutil -q cp gs://w266_final_project_kk/data/split01_test_data_01.csv .')
 end_dl = time.time()
-print("review.csv download took " + str(end_dl-start_dl) + " seconds")
+print("data download took " + str(end_dl-start_dl) + " seconds")
 #gsutil cp gs://[BUCKET_NAME]/[OBJECT_NAME] [OBJECT_DESTINATION]
-review_path = './review.csv'
+train_review_path = './split01_train_data_01.csv'
+test_review_path = './split01_test_data_01.csv'
 
-trained_filename, model_params, words_to_ids, ids_to_words = train_attack_model(training_samples=25000, 
-                                                                                test_samples=6250, 
-                                                                                review_path = review_path)
+#trained_filename, model_params, words_to_ids, ids_to_words = train_attack_model(training_samples=25000, 
+                                                                                #test_samples=6250, 
+                                                                                #review_path = review_path)
 
+start_format = time.time()
+with open(train_review_path, 'r') as csvfile1:
+    reader1 = csv.reader(csvfile1, delimiter=',')
+    training_review_list = [item for sublist in reader1 for item in sublist]
+
+with open(test_review_path, 'r') as csvfile2:
+    reader2 = csv.reader(csvfile2, delimiter=',')
+    test_review_list = [item for sublist in reader2 for item in sublist]
+
+words_to_ids, ids_to_words = make_vocabulary([training_review_list, test_review_list])
+train_ids = convert_to_ids(words_to_ids, training_review_list)
+test_ids = convert_to_ids(words_to_ids, test_review_list)
+end_format = time.time()
+print("data formatting took " + str(end_format-start_format) + " seconds")
+model_params = dict(V=len(words_to_ids.keys()), H=1024, softmax_ns=len(words_to_ids.keys()), num_layers=2)
+trained_filename = run_training(train_ids, test_ids, tf_savedir = "/tmp/artificial_hotel_reviews/a4_model", model_params=model_params, max_time=150, batch_size=256, learning_rate=0.002, num_epochs=1)
+
+start_sampling = time.time()
 generate_text(trained_filename, model_params, words_to_ids, ids_to_words)
+end_sampling = time.time()
+print("character sampling took " + str(end_sampling-start_sampling) + " seconds")
 
 #test_graph()
 #test_training()
