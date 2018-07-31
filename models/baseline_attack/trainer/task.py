@@ -169,6 +169,20 @@ def get_business_list(business_path = '/home/kalvin_kao/yelp_challenge_dataset/b
     #business_path = '/home/kalvin_kao/yelp_challenge_dataset/business.csv'
     return pd.read_csv(business_path)
 
+def split_train_test(review_list, training_samples, test_samples):
+    #pass in randomized review list
+    train_len = int(np.floor(0.8*len(review_list)))
+    test_len = int(np.floor(0.2*len(review_list)))
+    training_review_list = review_list[:train_len]
+    testing_review_list = review_list[-test_len:]
+    randomized_training_list = random.sample(training_review_list, training_samples)
+    randomized_testing_list = random.sample(testing_review_list, test_samples)
+    training_review_list = [item for sublist in randomized_training_list for item in sublist]
+    print("number of training characters", len(training_review_list))
+    test_review_list = [item for sublist in randomized_testing_list for item in sublist]
+    print("number of test characters", len(test_review_list))
+    return randomized_training_list, randomized_testing_list
+
 def make_train_test_data(five_star_review_series, training_samples=20000, test_samples=1000):
     #fix randomization to prevent evaluation on trained samples
     review_list = preprocess_review_series(five_star_review_series)
@@ -189,8 +203,16 @@ def make_train_test_data(five_star_review_series, training_samples=20000, test_s
     print("number of test characters", len(test_review_list))
     return training_review_list, test_review_list
 
-def make_vocabulary(training_review_list, test_review_list):
-    unique_characters = list(set(training_review_list + test_review_list))
+
+#def make_vocabulary(training_review_list, test_review_list):
+#    unique_characters = list(set(training_review_list + test_review_list))
+#    #vocabulary
+#    char_dict = {w:i for i, w in enumerate(unique_characters)}
+#    ids_to_words = {v: k for k, v in char_dict.items()}
+#    return char_dict, ids_to_words
+def make_vocabulary(dataset_list):
+    unique_characters = list(set().union(*dataset_list))
+    #unique_characters = list(set(training_review_list + test_review_list))
     #vocabulary
     char_dict = {w:i for i, w in enumerate(unique_characters)}
     ids_to_words = {v: k for k, v in char_dict.items()}
@@ -388,7 +410,8 @@ test_review_path = './split01_test_data_01.csv'
                                                                                 #test_samples=6250, 
                                                                                 #review_path = review_path)
 
-start_format = time.time()
+
+start_open = time.time()
 with open(train_review_path, 'r') as csvfile1:
     reader1 = csv.reader(csvfile1, delimiter=',')
     training_review_list = [item for sublist in reader1 for item in sublist]
@@ -396,14 +419,21 @@ with open(train_review_path, 'r') as csvfile1:
 with open(test_review_path, 'r') as csvfile2:
     reader2 = csv.reader(csvfile2, delimiter=',')
     test_review_list = [item for sublist in reader2 for item in sublist]
+end_open = time.time()
+print("data reading took " + str(end_open-start_open) + " seconds")
 
+start_vocab = time.time()
 words_to_ids, ids_to_words = make_vocabulary([training_review_list, test_review_list])
 train_ids = convert_to_ids(words_to_ids, training_review_list)
 test_ids = convert_to_ids(words_to_ids, test_review_list)
-end_format = time.time()
-print("data formatting took " + str(end_format-start_format) + " seconds")
+end_vocab = time.time()
+print("vocabulary building took " + str(end_vocab-start_vocab) + " seconds")
+
+start_training = time.time()
 model_params = dict(V=len(words_to_ids.keys()), H=1024, softmax_ns=len(words_to_ids.keys()), num_layers=2)
 trained_filename = run_training(train_ids, test_ids, tf_savedir = "/tmp/artificial_hotel_reviews/a4_model", model_params=model_params, max_time=150, batch_size=256, learning_rate=0.002, num_epochs=1)
+end_training = time.time()
+print("overall training took " + str(end_training-start_training) + " seconds")
 
 start_sampling = time.time()
 generate_text(trained_filename, model_params, words_to_ids, ids_to_words)
