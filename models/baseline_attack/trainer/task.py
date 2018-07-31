@@ -51,6 +51,7 @@ import pandas as pd
 #
 #import cloudstorage as gcs
 import random
+import csv
 
 def make_tensorboard(tf_graphdir="/tmp/artificial_hotel_reviews/a4_graph", V=100, H=1024, num_layers=2):
     reload(rnnlm)
