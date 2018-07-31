@@ -337,7 +337,7 @@ def generate_text(trained_filename, model_params, words_to_ids, ids_to_words):
     # Same as above, but as a batch
     #max_steps = 20
     max_steps = 300
-    num_samples = 10000
+    num_samples = 40000
     random_seed = 42
     
     lm = rnnlm.RNNLM(**model_params)
@@ -431,7 +431,7 @@ print("vocabulary building took " + str(end_vocab-start_vocab) + " seconds")
 
 start_training = time.time()
 model_params = dict(V=len(words_to_ids.keys()), H=1024, softmax_ns=len(words_to_ids.keys()), num_layers=2)
-trained_filename = run_training(train_ids, test_ids, tf_savedir = "/tmp/artificial_hotel_reviews/a4_model", model_params=model_params, max_time=150, batch_size=256, learning_rate=0.002, num_epochs=1)
+trained_filename = run_training(train_ids, test_ids, tf_savedir = "/tmp/artificial_hotel_reviews/a4_model", model_params=model_params, max_time=150, batch_size=256, learning_rate=0.002, num_epochs=20)
 end_training = time.time()
 print("overall training took " + str(end_training-start_training) + " seconds")
 
