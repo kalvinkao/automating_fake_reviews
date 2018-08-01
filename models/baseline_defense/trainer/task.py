@@ -51,6 +51,7 @@ import pandas as pd
 #
 #import cloudstorage as gcs
 import random
+import csv
 
 def make_tensorboard(tf_graphdir="/tmp/artificial_hotel_reviews/a4_graph", V=100, H=1024, num_layers=2):
     reload(rnnlm)
@@ -76,6 +77,20 @@ def test_training():
     th.setUp(); th.injectCode(run_epoch, score_dataset)
     unittest.TextTestRunner(verbosity=2).run(th)
 
+def score_each_step(lm, session, ids):
+    #no batching
+    bi = utils.rnnlm_batch_generator(ids, batch_size=100, max_time=100)
+    for i, (w,y) in enumerate(bi):
+        if i == 0:
+            h = session.run(lm.initial_h_, {lm.input_w_: w})
+        feed_dict = {lm.input_w_:w,
+                     lm.target_y_:y,
+                     lm.learning_rate_: 0.002,
+                     lm.use_dropout_: False,
+                     lm.initial_h_:h}
+        cost, h, _ = session.run([loss, lm.final_h_, train_op],feed_dict=feed_dict)
+        #pick up here
+        
 ## Training Functions
 def run_epoch(lm, session, batch_iterator,
               train=False, verbose=False,
@@ -168,6 +183,20 @@ def get_business_list(business_path = '/home/kalvin_kao/yelp_challenge_dataset/b
     #business_path = '/home/kalvin_kao/yelp_challenge_dataset/business.csv'
     return pd.read_csv(business_path)
 
+def split_train_test(review_list, training_samples, test_samples):
+    #pass in randomized review list
+    train_len = int(np.floor(0.8*len(review_list)))
+    test_len = int(np.floor(0.2*len(review_list)))
+    training_review_list = review_list[:train_len]
+    testing_review_list = review_list[-test_len:]
+    randomized_training_list = random.sample(training_review_list, training_samples)
+    randomized_testing_list = random.sample(testing_review_list, test_samples)
+    training_review_list = [item for sublist in randomized_training_list for item in sublist]
+    print("number of training characters", len(training_review_list))
+    test_review_list = [item for sublist in randomized_testing_list for item in sublist]
+    print("number of test characters", len(test_review_list))
+    return randomized_training_list, randomized_testing_list
+
 def make_train_test_data(five_star_review_series, training_samples=20000, test_samples=1000):
     #fix randomization to prevent evaluation on trained samples
     review_list = preprocess_review_series(five_star_review_series)
@@ -188,8 +217,16 @@ def make_train_test_data(five_star_review_series, training_samples=20000, test_s
     print("number of test characters", len(test_review_list))
     return training_review_list, test_review_list
 
-def make_vocabulary(training_review_list, test_review_list):
-    unique_characters = list(set(training_review_list + test_review_list))
+
+#def make_vocabulary(training_review_list, test_review_list):
+#    unique_characters = list(set(training_review_list + test_review_list))
+#    #vocabulary
+#    char_dict = {w:i for i, w in enumerate(unique_characters)}
+#    ids_to_words = {v: k for k, v in char_dict.items()}
+#    return char_dict, ids_to_words
+def make_vocabulary(dataset_list):
+    unique_characters = list(set().union(*dataset_list))
+    #unique_characters = list(set(training_review_list + test_review_list))
     #vocabulary
     char_dict = {w:i for i, w in enumerate(unique_characters)}
     ids_to_words = {v: k for k, v in char_dict.items()}
@@ -285,6 +322,22 @@ def run_training(train_ids, test_ids, tf_savedir, model_params, max_time=100, ba
         saver.save(session, trained_filename)
         return trained_filename
 
+def get_char_probs(trained_filename, model_params, test_ids):
+    test_likelihoods = None
+    lm = rnnlm.RNNLM(**model_params)
+    lm.BuildCoreGraph()
+    
+    with lm.graph.as_default():
+        saver = tf.train.Saver()
+    
+    with tf.Session(graph=lm.graph) as session:
+        saver.restore(session, trained_filename)
+        
+        h = session.run(lm.initial_h_, {lm.input_w_: w})
+        
+        
+    return test_likelihoods
+
 ## Sampling
 def sample_step(lm, session, input_w, initial_h):
     """Run a single RNN step and return sampled predictions.
@@ -314,7 +367,7 @@ def generate_text(trained_filename, model_params, words_to_ids, ids_to_words):
     # Same as above, but as a batch
     #max_steps = 20
     max_steps = 300
-    num_samples = 10000
+    num_samples = 50
     random_seed = 42
     
     lm = rnnlm.RNNLM(**model_params)
@@ -342,6 +395,7 @@ def generate_text(trained_filename, model_params, words_to_ids, ids_to_words):
     
         # Print generated sentences
         for row in w:
+            print(trained_filename, end=":  ")
             for i, word_id in enumerate(row):
                 #print(vocab.id_to_word[word_id], end=" ")
                 print(ids_to_words[word_id], end="")
@@ -367,52 +421,79 @@ def train_attack_model(training_samples=20000, test_samples=1000, review_path = 
                             softmax_ns=len(words_to_ids.keys()),
                             num_layers=2)
     #run_training(train_ids, test_ids, tf_savedir, model_params, max_time=100, batch_size=256, learning_rate=0.002, num_epochs=20)
-    trained_filename = run_training(train_ids, test_ids, tf_savedir = "/tmp/artificial_hotel_reviews/attack_model", model_params=model_params, max_time=150, batch_size=256, learning_rate=0.002, num_epochs=20)
+    trained_filename = run_training(train_ids, test_ids, tf_savedir = "/tmp/artificial_hotel_reviews/a4_model", model_params=model_params, max_time=150, batch_size=256, learning_rate=0.002, num_epochs=20)
     return trained_filename, model_params, words_to_ids, ids_to_words
 
-def train_defense_model(training_samples=20000, test_samples=1000, review_path = '/home/kalvin_kao/yelp_challenge_dataset/review.csv'):
-    #training_samples=20000
-    #test_samples=1000
-    #review_path = '/home/kalvin_kao/yelp_challenge_dataset/review.csv'
-    start_format = time.time()
-    five_star_reviews = get_review_series(review_path)
-    train_review_list, test_review_list = make_train_test_data(five_star_reviews, training_samples, test_samples)
-    words_to_ids, ids_to_words = make_vocabulary(train_review_list, test_review_list)
-    train_ids = convert_to_ids(words_to_ids, train_review_list)
-    test_ids = convert_to_ids(words_to_ids, test_review_list)
-    end_format = time.time()
-    print("data formatting took " + str(end_format-start_format) + " seconds")
-    model_params = dict(V=len(words_to_ids.keys()), 
-                            H=1024, 
-                            softmax_ns=len(words_to_ids.keys()),
-                            num_layers=2)
-    #run_training(train_ids, test_ids, tf_savedir, model_params, max_time=100, batch_size=256, learning_rate=0.002, num_epochs=20)
-    trained_filename = run_training(train_ids, test_ids, tf_savedir = "/tmp/artificial_hotel_reviews/defense_model", model_params=model_params, max_time=150, batch_size=128, learning_rate=0.002, num_epochs=20)
-    return trained_filename, model_params, words_to_ids, ids_to_words
-
-#get data from gcs-- uncomment for ML engine
+#get data from gcs
 #review_path = 'gs://w266_final_project_kk/data/review.csv'
-#start_dl = time.time()
-#os.system('gsutil -q cp gs://w266_final_project_kk/data/review.csv .')
-#end_dl = time.time()
-#print("review.csv download took " + str(end_dl-start_dl) + " seconds")
+#train_review_path = 'gs://w266_final_project_kk/data/split01_train_data_01.csv'
+#test_review_path = 'gs://w266_final_project_kk/data/split01_test_data_01.csv'
+start_dl = time.time()
+os.system('gsutil -q cp gs://w266_final_project_kk/data/split01_train_data_02.csv .')
+os.system('gsutil -q cp gs://w266_final_project_kk/data/split01_test_data_02.csv .')
+os.system('gsutil -q cp gs://w266_final_project_kk/data/gen01_train_data_01.csv .')
+os.system('gsutil -q cp gs://w266_final_project_kk/data/gen01_test_data_01.csv .')
+end_dl = time.time()
+print("data download took " + str(end_dl-start_dl) + " seconds")
 #gsutil cp gs://[BUCKET_NAME]/[OBJECT_NAME] [OBJECT_DESTINATION]
-#review_path = './review.csv'
+real_train_review_path = './split01_train_data_02.csv'
+real_test_review_path = './split01_test_data_02.csv'
+artificial_train_review_path = './gen01_train_data_01.csv'
+artificial_test_review_path = './gen01_test_data_01.csv'
 
 #trained_filename, model_params, words_to_ids, ids_to_words = train_attack_model(training_samples=25000, 
                                                                                 #test_samples=6250, 
-                                       
-                                         #review_path = review_path)
-#separate training for each LSTM
-generated_reviews_path = ""
-trained_filename_a, model_params_a, words_to_ids_a, ids_to_words_a = train_attack_model(training_samples=10000, 
-                                                                                        test_samples=2500, 
-                                                                                        review_path = generated_reviews_path)
-trained_filename_d, model_params_d, words_to_ids_d, ids_to_words_d = train_defense_model(training_samples=10000, 
-                                                                                         test_samples=2500)
+                                                                                #review_path = review_path)
 
 
-#generate_text(trained_filename, model_params, words_to_ids, ids_to_words)
+start_open = time.time()
+with open(real_train_review_path, 'r') as csvfile:
+    reader = csv.reader(csvfile, delimiter=',')
+    training_review_list_real = [item for sublist in reader for item in sublist]
+
+with open(real_test_review_path, 'r') as csvfile:
+    reader = csv.reader(csvfile, delimiter=',')
+    #make into list of list
+    test_review_list_real = [item for sublist in reader for item in sublist]
+
+with open(artificial_train_review_path, 'r') as csvfile:
+    reader = csv.reader(csvfile, delimiter=',')
+    training_review_list_artificial = [item for sublist in reader for item in sublist]
+
+with open(artificial_test_review_path, 'r') as csvfile:
+    reader = csv.reader(csvfile, delimiter=',')
+    #make into list of list
+    test_review_list_artificial = [item for sublist in reader for item in sublist]
+end_open = time.time()
+print("data reading took " + str(end_open-start_open) + " seconds")
+
+start_vocab = time.time()
+words_to_ids, ids_to_words = make_vocabulary([training_review_list_real, test_review_list_real, training_review_list_artificial, test_review_list_artificial])
+train_ids_real = convert_to_ids(words_to_ids, training_review_list_real)
+test_ids_real = convert_to_ids(words_to_ids, test_review_list_real)
+train_ids_artificial = convert_to_ids(words_to_ids, training_review_list_artificial)
+test_ids_artificial = convert_to_ids(words_to_ids, test_review_list_artificial)
+end_vocab = time.time()
+print("vocabulary building took " + str(end_vocab-start_vocab) + " seconds")
+
+start_training = time.time()
+model_params = dict(V=len(words_to_ids.keys()), H=1024, softmax_ns=len(words_to_ids.keys()), num_layers=2)
+trained_filename_real = run_training(train_ids_real, test_ids_real, tf_savedir = "/tmp/defense_model/real", model_params=model_params, max_time=150, batch_size=128, learning_rate=0.002, num_epochs=20)
+trained_filename_artificial = run_training(train_ids_artificial, test_ids_artificial, tf_savedir = "/tmp/defense_model/artificial", model_params=model_params, max_time=150, batch_size=128, learning_rate=0.002, num_epochs=20)
+end_training = time.time()
+print("overall training took " + str(end_training-start_training) + " seconds")
+
+start_sampling = time.time()
+generate_text(trained_filename_real, model_params, words_to_ids, ids_to_words)
+generate_text(trained_filename_artificial, model_params, words_to_ids, ids_to_words)
+end_sampling = time.time()
+print("character sampling took " + str(end_sampling-start_sampling) + " seconds")
+
+start_scoring = time.time()
+test_likelihoods_real = get_char_probs(trained_filename_real, model_params, test_ids_real)
+test_likelihoods_artificial = get_char_probs(trained_filename_artificial, model_params, test_ids_artificial)
+end_scoring = time.time()
+print("review scoring took " + str(end_scoring-start_scoring) + " seconds")
 
 #test_graph()
 #test_training()

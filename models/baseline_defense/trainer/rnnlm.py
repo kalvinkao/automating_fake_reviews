@@ -148,23 +148,31 @@ class RNNLM(object):
         # Input ids, with dynamic shape depending on input.
         # Should be shape [batch_size, max_time] and contain integer word indices.
         self.input_w_ = tf.placeholder(tf.int32, [None, None], name="w")
+        #tf.placeholder(tf.int32, [self.batch_size_, self.max_time_], name="w")
 
         # Initial hidden state. You'll need to overwrite this with cell.zero_state
         # once you construct your RNN cell.
         self.initial_h_ = None
+        #tf.placeholder(tf.int32, [self.H,], name="h_i")
+        #tf.Variable(tf.random_normal([H,]), name="h_i")
 
         # Final hidden state. You'll need to overwrite this with the output from
         # tf.nn.dynamic_rnn so that you can pass it in to the next batch (if
         # applicable).
         self.final_h_ = None
+        #tf.placeholder(tf.int32, [self.H,], name="h_f")
+        #tf.Variable(tf.random_normal([H,]), name="h_f")
 
         # Output logits, which can be used by loss functions or for prediction.
         # Overwrite this with an actual Tensor of shape
         # [batch_size, max_time, V].
         self.logits_ = None
+        #tf.placeholder(tf.int32, [self.batch_size_, self.max_time_, self.V], name="logits")
+        #tf.Variable(tf.random_normal([self.batch_size_, self.max_time_, self.V]), name="logits")
 
         # Should be the same shape as inputs_w_
         self.target_y_ = tf.placeholder(tf.int32, [None, None], name="y")
+        #tf.placeholder(tf.int32, [None, None], name="y")
 
         # Replace this with an actual loss function
         self.loss_ = None
@@ -184,7 +192,18 @@ class RNNLM(object):
         # assignment.
         self.ns_ = tf.tile([self.max_time_], [self.batch_size_, ], name="ns")#update this for project
 
+        #### YOUR CODE HERE ####
+        # See hints in instructions!
+
         # Construct embedding layer
+        #self.W_in_ = tf.get_variable("W_in", shape=[self.V, self.H], 
+                                     #initializer = tf.random_uniform_initializer(minval=-1.0, maxval=1.0))
+        #self.x_ = tf.nn.embedding_lookup(self.W_in_, self.input_w_)
+        
+        #self.W_in_ = tf.get_variable(tf.random_uniform([self.V, self.H], -1.0, 1.0), name="W_in")
+        #Variable(tf.random_uniform([V, M], -1.0, 1.0), name="C")
+        # embedding_lookup gives shape (batch_size, N, M)
+        #x_ = tf.nn.embedding_lookup(self.W_in_, self.input_w_)
         
         with tf.name_scope("embedding_layer"):
             self.W_in_ = tf.get_variable("W_in", shape=[self.V, self.H], 
@@ -200,13 +219,32 @@ class RNNLM(object):
             self.outputs_, self.final_h_ = tf.nn.dynamic_rnn(self.cell_, inputs=self.x_, 
                                                               sequence_length=self.ns_, initial_state=self.initial_h_,
                                                        dtype=tf.float32)
-        # Softmax output layer, over vocabulary.
+            #print(self.outputs_.get_shape())
+        #self.outputs_, self.final_h_ = tf.nn.dynamic_rnn(self.cell_, inputs=x_, 
+                                                          #sequence_length=self.ns_, initial_state=self.initial_h_,
+                                                   #dtype=tf.float32)
+        
+        #W1_ = tf.Variable(tf.random_normal([N*M,H]), name="W1")
+        #b1_ = tf.Variable(tf.zeros([H,], dtype=tf.float32), name="b1")
+        #h_ = tf.tanh(tf.matmul(x_, W1_) + b1_, name="h")
+
+
+
+
+
+        # Softmax output layer, over vocabulary. Just compute logits_ here.
+        # Hint: the matmul3d function will be useful here; it's a drop-in
+        # replacement for tf.matmul that will handle the "time" dimension
+        # properly.
         with tf.name_scope("softmax_output_layer"):
             self.W_out_ = tf.get_variable("W_out", shape=[self.H, self.V], 
                                           initializer = tf.random_uniform_initializer(minval=-1.0, maxval=1.0))
+            #tf.get_variable(tf.random_uniform([self.H, self.V], -1.0, 1.0), name="W_out")
 
             self.b_out_ = tf.get_variable("b_out", shape=[self.V,], 
                                           initializer = tf.zeros_initializer())
+            #self.b_out_ = tf.get_variable("b_out", shape=[self.V,], initializer = tf.random_uniform_initializer(minval=-1.0, maxval=1.0))
+            #tf.get_variable(tf.random_uniform([self.V,], -1.0, 1.0), name="b_out")
 
             self.logits_ = tf.add(matmul3d(self.outputs_, self.W_out_), self.b_out_, name="logits")
             #print(self.logits_.get_shape())
@@ -220,6 +258,9 @@ class RNNLM(object):
                                                                                name="per_example_loss")
             self.loss_ = tf.reduce_mean(per_example_loss_, name="loss")
 
+
+
+        #### END(YOUR CODE) ####
 
     @with_self_graph
     def BuildTrainGraph(self):
