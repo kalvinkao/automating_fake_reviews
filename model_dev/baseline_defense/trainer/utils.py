@@ -12,8 +12,8 @@ import pandas as pd
 
 #from . import constants
 #from trainer import constants
-#import constants
-import trainer.constants as constants
+import constants
+#import trainer.constants as constants
 
 ##
 # Package and module utils
