@@ -18,9 +18,9 @@ REQUIRED_PACKAGES = [
 
 setup(
     name='trainer',
-    version='0.3.0',
+    version='1.0.0',
     install_requires=REQUIRED_PACKAGES,
     packages=find_packages(),
     include_package_data=True,
-    description='baseline attack training package'
+    description='baseline defense training package'
 )

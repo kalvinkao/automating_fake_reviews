@@ -520,15 +520,19 @@ print("vocabulary building took " + str(end_vocab-start_vocab) + " seconds")
 
 start_training = time.time()
 model_params = dict(V=len(words_to_ids.keys()), H=1024, softmax_ns=len(words_to_ids.keys()), num_layers=2)
-trained_filename_real = run_training(train_ids_real, test_ids_real_training_eval, tf_savedir = "/tmp/defense_model/real", model_params=model_params, max_time=150, batch_size=128, learning_rate=0.002, num_epochs=20)
-trained_filename_artificial = run_training(train_ids_artificial, test_ids_artificial_training_eval, tf_savedir = "/tmp/defense_model/artificial", model_params=model_params, max_time=150, batch_size=128, learning_rate=0.002, num_epochs=20)
+#trained_filename_real = run_training(train_ids_real, test_ids_real_training_eval, tf_savedir = "/tmp/defense_model/real", model_params=model_params, max_time=150, batch_size=128, learning_rate=0.002, num_epochs=20)#UPDATE FOR ACTUAL RUN
+#trained_filename_artificial = run_training(train_ids_artificial, test_ids_artificial_training_eval, tf_savedir = "/tmp/defense_model/artificial", model_params=model_params, max_time=150, batch_size=128, learning_rate=0.002, num_epochs=20)#UPDATE FOR ACTUAL RUN
+trained_filename_real = run_training(train_ids_real[:5000000], test_ids_real_training_eval[:1000000], tf_savedir = "/tmp/defense_model/real", model_params=model_params, max_time=150, batch_size=128, learning_rate=0.002, num_epochs=1)#UPDATE FOR ACTUAL RUN
+trained_filename_artificial = run_training(train_ids_artificial[:5000000], test_ids_artificial_training_eval[:1000000], tf_savedir = "/tmp/defense_model/artificial", model_params=model_params, max_time=150, batch_size=128, learning_rate=0.002, num_epochs=1)#UPDATE FOR ACTUAL RUN
 end_training = time.time()
 print("overall training took " + str(end_training-start_training) + " seconds")
 
 ### UPDATED!!!
 #save both RNNs for later use
-save_command_1  = "gsutil cp -r " + trained_filename_real[0:trained_filename_real.rfind("/")] + " gs://w266_final_project_kk/defense_real/" + str(int(np.floor(time.time())))
-save_command_2  = "gsutil cp -r " + trained_filename_artificial[0:trained_filename_artificial.rfind("/")] + " gs://w266_final_project_kk/defense_artificial/" + str(int(np.floor(time.time())))
+#save_command_1  = "gsutil cp -r " + trained_filename_real[0:trained_filename_real.rfind("/")] + " gs://w266_final_project_kk/defense_real/" + str(int(np.floor(time.time())))
+#save_command_2  = "gsutil cp -r " + trained_filename_artificial[0:trained_filename_artificial.rfind("/")] + " gs://w266_final_project_kk/defense_artificial/" + str(int(np.floor(time.time())))
+save_command_1  = "gsutil cp -r " + trained_filename_real[0:trained_filename_real.rfind("/")] + " gs://w266_final_project_kk/practice_run/defense_real/" + str(int(np.floor(time.time())))
+save_command_2  = "gsutil cp -r " + trained_filename_artificial[0:trained_filename_artificial.rfind("/")] + " gs://w266_final_project_kk/practice_run/defense_artificial/" + str(int(np.floor(time.time())))
 os.system(save_command_1)
 os.system(save_command_2)
 ### UPDATED!!!
@@ -551,8 +555,8 @@ predictions_real = neg_log_lik_ratio(test_likelihoods_real_from_real, test_likel
 
 #next feed the generated reviews into each RNN and get the softmax probability of each character
 #get the classification for generated reviews by forming an average negative log-likelihood ratio for each review
-test_likelihoods_artificial_from_real = get_char_probs(trained_filename_real, model_params, test_ids_artificial)
-test_likelihoods_artificial_from_artificial = get_char_probs(trained_filename_artificial, model_params, test_ids_artificial)
+test_likelihoods_artificial_from_real = get_char_probs(trained_filename_real, model_params, test_ids_artificial[:1000])
+test_likelihoods_artificial_from_artificial = get_char_probs(trained_filename_artificial, model_params, test_ids_artificial[:1000])
 predictions_artificial = neg_log_lik_ratio(test_likelihoods_artificial_from_real, test_likelihoods_artificial_from_artificial)
 end_scoring = time.time()
 print("review scoring took " + str(end_scoring-start_scoring) + " seconds")
@@ -562,8 +566,10 @@ predictions_real = np.array(predictions_real)
 predictions_artificial = np.array(predictions_artificial)
 np.savetxt("predictions_real.csv", predictions_real, delimiter=",")
 np.savetxt("predictions_artificial.csv", predictions_artificial, delimiter=",")
-os.system("gsutil cp predictions_real.csv gs://w266_final_project_kk/defense_predictions_real/")
-os.system("gsutil cp predictions_artificial.csv gs://w266_final_project_kk/defense_predictions_artificial/")
+#os.system("gsutil cp predictions_real.csv gs://w266_final_project_kk/defense_predictions_real/")
+#os.system("gsutil cp predictions_artificial.csv gs://w266_final_project_kk/defense_predictions_artificial/")
+os.system("gsutil cp predictions_real.csv gs://w266_final_project_kk/practice_run/defense_predictions_real/")
+os.system("gsutil cp predictions_artificial.csv gs://w266_final_project_kk/practice_run/defense_predictions_artificial/")
 ### UPDATED!!!
     
 #test_graph()
