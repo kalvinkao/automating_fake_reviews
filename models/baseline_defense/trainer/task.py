@@ -346,6 +346,12 @@ def get_char_probs(trained_filename, model_params, test_ids):
             labels = review[1:]
             inputs_labels = zip(inputs,labels)
             for i, (w,y) in enumerate(inputs_labels):
+                
+                w = np.array(w)
+                y = np.array(y)
+                w = w.reshape([1,1])
+                y = y.reshape([1,1])
+                
                 if i == 0:
                     h = session.run(lm.initial_h_, {lm.input_w_: w})
 
@@ -354,7 +360,7 @@ def get_char_probs(trained_filename, model_params, test_ids):
                              lm.learning_rate_: 0.002,
                              lm.use_dropout_: use_dropout,
                              lm.initial_h_:h}
-                cost, h, _ = session.run([loss, lm.final_h_, train_op],feed_dict=feed_dict)
+                cost, h = session.run([loss, lm.final_h_],feed_dict=feed_dict)
                 likelihood = 2**(-1*cost)
                 review_likelihoods.append(likelihood)
             all_review_likelihoods.append(review_likelihoods)
@@ -451,7 +457,8 @@ def neg_log_lik_ratio(likelihoods_real, likelihoods_artificial):
     combined = zip(likelihoods_real, likelihoods_artificial)
     for (real_review_likelihoods, artificial_review_likelihoods) in combined:
         negative_log_lik_ratios = -1*(np.log(np.divide(real_review_likelihoods, artificial_review_likelihoods)))
-        averaged_llrs = negative_log_lik_ratios[:-1]/(len(negative_log_lik_ratios)-1)
+        #averaged_llrs = negative_log_lik_ratios[:-1]/(len(negative_log_lik_ratios)-1)
+        averaged_llrs = np.sum(negative_log_lik_ratios[:-1])/(len(negative_log_lik_ratios)-1)
         predictions.append(averaged_llrs)
     return predictions
 
@@ -518,26 +525,46 @@ trained_filename_artificial = run_training(train_ids_artificial, test_ids_artifi
 end_training = time.time()
 print("overall training took " + str(end_training-start_training) + " seconds")
 
+### UPDATED!!!
+#save both RNNs for later use
+save_command_1  = "gsutil cp -r " + trained_filename_real[0:trained_filename_real.rfind("/")] + " gs://w266_final_project_kk/defense_real/" + str(int(np.floor(time.time())))
+save_command_2  = "gsutil cp -r " + trained_filename_artificial[0:trained_filename_artificial.rfind("/")] + " gs://w266_final_project_kk/defense_artificial/" + str(int(np.floor(time.time())))
+os.system(save_command_1)
+os.system(save_command_2)
+### UPDATED!!!
+
+#generate examples from each RNN out of curiosity
 start_sampling = time.time()
 generate_text(trained_filename_real, model_params, words_to_ids, ids_to_words)
 generate_text(trained_filename_artificial, model_params, words_to_ids, ids_to_words)
 end_sampling = time.time()
 print("character sampling took " + str(end_sampling-start_sampling) + " seconds")
 
+#first feed the real reviews into each RNN and get the softmax probability of each character
+#get the classification for real reviews by forming an average negative log-likelihood ratio for each review
 start_scoring = time.time()
-test_likelihoods_real_from_real = get_char_probs(trained_filename_real, model_params, test_ids_real)
-test_likelihoods_real_from_artificial = get_char_probs(trained_filename_artificial, model_params, test_ids_real)
+test_likelihoods_real_from_real = get_char_probs(trained_filename_real, model_params, test_ids_real[:1000])
+test_likelihoods_real_from_artificial = get_char_probs(trained_filename_artificial, model_params, test_ids_real[:1000])
 predictions_real = neg_log_lik_ratio(test_likelihoods_real_from_real, test_likelihoods_real_from_artificial)
 #negative_log_lik_ratios = -1*(np.log(np.divide(test_likelihoods_real_from_real, test_likelihoods_real_from_artificial)))
 #predictor = 
 
+#next feed the generated reviews into each RNN and get the softmax probability of each character
+#get the classification for generated reviews by forming an average negative log-likelihood ratio for each review
 test_likelihoods_artificial_from_real = get_char_probs(trained_filename_real, model_params, test_ids_artificial)
 test_likelihoods_artificial_from_artificial = get_char_probs(trained_filename_artificial, model_params, test_ids_artificial)
 predictions_artificial = neg_log_lik_ratio(test_likelihoods_artificial_from_real, test_likelihoods_artificial_from_artificial)
 end_scoring = time.time()
 print("review scoring took " + str(end_scoring-start_scoring) + " seconds")
 
-
+### UPDATED!!!
+predictions_real = np.array(predictions_real)
+predictions_artificial = np.array(predictions_artificial)
+np.savetxt("predictions_real.csv", predictions_real, delimiter=",")
+np.savetxt("predictions_artificial.csv", predictions_artificial, delimiter=",")
+os.system("gsutil cp predictions_real.csv gs://w266_final_project_kk/defense_predictions_real/")
+os.system("gsutil cp predictions_artificial.csv gs://w266_final_project_kk/defense_predictions_artificial/")
+### UPDATED!!!
     
 #test_graph()
 #test_training()
