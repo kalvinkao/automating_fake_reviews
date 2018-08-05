@@ -268,6 +268,7 @@ def run_training(train_ids, test_ids, tf_savedir, model_params, max_time=100, ba
     
     lm = rnnlm.RNNLM(**model_params)
     lm.BuildCoreGraph()
+    lm.BuildSamplerGraph()
     lm.BuildTrainGraph()
     
     # Explicitly add global initializer and variable saver to LM graph

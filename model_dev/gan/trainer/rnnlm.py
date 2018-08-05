@@ -346,6 +346,7 @@ class RNNLM(object):
         """
         # Replace this with an actual training op
         self.train_step_ = None
+        self.train_step_softmax_ = None
 
         # Replace this with an actual loss function
         self.train_loss_ = None
