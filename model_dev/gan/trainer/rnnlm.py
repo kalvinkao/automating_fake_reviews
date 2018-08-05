@@ -234,6 +234,10 @@ class RNNLM(object):
             self.outputs_, self.final_h_ = tf.nn.dynamic_rnn(self.cell_, inputs=self.x_, 
                                                               sequence_length=self.ns_, initial_state=self.initial_h_,
                                                        dtype=tf.float32)
+            # 'outputs' is a tensor of shape [batch_size, max_time, H]
+            # 'state' is a N-tuple where N is the number of LSTMCells containing a
+            # tf.contrib.rnn.LSTMStateTuple for each cell
+
             #print(self.outputs_.get_shape())
         #self.outputs_, self.final_h_ = tf.nn.dynamic_rnn(self.cell_, inputs=x_, 
                                                           #sequence_length=self.ns_, initial_state=self.initial_h_,
@@ -280,10 +284,23 @@ class RNNLM(object):
         print(lstm_h.get_shape)
         #lstm_h[:1, :]
         self.input_x = lstm_h
-        with tf.name_scope("cnn_embedding_layer"):
-            W = tf.Variable(tf.random_uniform([self.vocab_size, self.embedding_size], -1.0, 1.0), name="W_cnn")
-            self.embedded_chars = tf.nn.embedding_lookup(W, self.input_x)
-            self.embedded_chars_expanded = tf.expand_dims(self.embedded_chars, -1)
+        
+        # 'outputs' is a tensor of shape [batch_size, max_time, H]
+        # 'state' is a N-tuple where N is the number of LSTMCells containing a
+        # tf.contrib.rnn.LSTMStateTuple for each cell
+        #self.outputs_
+        #self.input_x = tf.placeholder(tf.int32, [None, self.sequence_length], name="input_x")
+        #self.input_y = tf.placeholder(tf.float32, [None, self.num_classes], name="input_y")
+        
+        #SKIP CNN EMBEDDING LAYER
+        #with tf.name_scope("cnn_embedding_layer"):
+            #W = tf.Variable(tf.random_uniform([self.vocab_size, self.embedding_size], -1.0, 1.0), name="W_cnn")
+            #self.embedded_chars = tf.nn.embedding_lookup(W, self.input_x)
+            #self.embedded_chars_expanded = tf.expand_dims(self.embedded_chars, -1)
+        
+        #self.embedded_chars_expanded = self.outputs_
+        self.embedded_chars_expanded = tf.expand_dims(self.outputs_, -1)
+        
         # Convolution and Max-Pooling Layers for CNN
         pooled_outputs = []
         for i, filter_size in enumerate(self.filter_sizes):
