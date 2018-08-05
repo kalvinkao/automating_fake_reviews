@@ -100,8 +100,8 @@ class RNNLM(object):
         self.num_filters = 3
         
         #CNN Input Placeholders
-        self.input_x = tf.placeholder(tf.int32, [None, sequence_length], name="input_x")
-        self.input_y = tf.placeholder(tf.float32, [None, num_classes], name="input_y")
+        self.input_x = tf.placeholder(tf.int32, [None, self.sequence_length], name="input_x")
+        self.input_y = tf.placeholder(tf.float32, [None, self.num_classes], name="input_y")
         #self.dropout_keep_prob = tf.placeholder(tf.float32, name="dropout_keep_prob")
 
         # Training hyperparameters; these can be changed with feed_dict,
@@ -276,6 +276,10 @@ class RNNLM(object):
 
 
         ## CNN
+        lstm_c, lstm_h = self.final_h_
+        print(lstm_h.get_shape)
+        #lstm_h[:1, :]
+        self.input_x = lstm_h
         with tf.name_scope("cnn_embedding_layer"):
             W = tf.Variable(tf.random_uniform([self.vocab_size, self.embedding_size], -1.0, 1.0), name="W_cnn")
             self.embedded_chars = tf.nn.embedding_lookup(W, self.input_x)
@@ -307,12 +311,13 @@ class RNNLM(object):
          
         # Combine all the pooled features
         num_filters_total = self.num_filters * len(self.filter_sizes)
-        self.h_pool = tf.concat(3, pooled_outputs)
+        #self.h_pool = tf.concat(3, pooled_outputs)
+        self.h_pool = tf.concat(pooled_outputs, 3)
         self.h_pool_flat = tf.reshape(self.h_pool, [-1, num_filters_total])
         
         # Add dropout
         with tf.name_scope("dropout"):
-            self.h_drop = tf.nn.dropout(self.h_pool_flat, self.dropout_keep_prob)
+            self.h_drop = tf.nn.dropout(self.h_pool_flat, self.dropout_keep_prob_)
 
         # Classify with CNN
         with tf.name_scope("output"):
@@ -323,7 +328,8 @@ class RNNLM(object):
         
         # Calculate CNN mean cross-entropy loss
         with tf.name_scope("loss"):
-            losses = tf.nn.softmax_cross_entropy_with_logits(self.scores, self.input_y)
+            #losses = tf.nn.softmax_cross_entropy_with_logits(self.scores, self.input_y)
+            losses = tf.nn.softmax_cross_entropy_with_logits(labels=self.input_y, logits=self.scores)
             self.loss_cnn = tf.reduce_mean(losses)
             
         # Calculate CNN Accuracy
@@ -420,6 +426,12 @@ class RNNLM(object):
         #gradient clipping: tf.clip_by_global_norm, self.max_grad_norm
         #self.train_step_ = optimizer_.minimize(self.train_loss_)
         with tf.name_scope("optimizer_and_training_op"):
+            optimizer0_ = tf.train.AdamOptimizer(learning_rate=self.learning_rate_)
+            gradients0, v0 = zip(*optimizer0_.compute_gradients(self.train_loss_))
+            gradients0, _ = tf.clip_by_global_norm(gradients0, self.max_grad_norm_)
+            self.train_step0_ = optimizer0_.apply_gradients(zip(gradients0, v0))
+        
+        with tf.name_scope("optimizer_and_training_op_for_cnn"):
             optimizer_ = tf.train.AdamOptimizer(learning_rate=self.learning_rate_)
             #gradients, v = zip(*optimizer_.compute_gradients(self.train_loss_))
             gradients, v = zip(*optimizer_.compute_gradients(self.loss_cnn))
@@ -429,7 +441,7 @@ class RNNLM(object):
         with tf.name_scope("optimizer_and_training_op_for_softmax_layer"):
             var_list = [self.W_out_, self.b_out_]
             optimizer2_ = tf.train.AdamOptimizer(learning_rate=self.learning_rate_)
-            gradients2, v2 = zip(*optimizer_.compute_gradients(self.train_loss_, var_list=var_list))
+            gradients2, v2 = zip(*optimizer2_.compute_gradients(self.train_loss_, var_list=var_list))
             #gradients, v = zip(*optimizer_.compute_gradients(self.loss_cnn))
             gradients2, _ = tf.clip_by_global_norm(gradients2, self.max_grad_norm_)
             self.train_step_softmax_ = optimizer2_.apply_gradients(zip(gradients2, v2))

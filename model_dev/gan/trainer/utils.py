@@ -11,8 +11,8 @@ import pandas as pd
 #from IPython.display import display, HTML
 
 #from . import constants
-#from trainer import constants
-import constants
+from trainer import constants
+#import constants
 #import trainer.constants as constants
 
 ##
