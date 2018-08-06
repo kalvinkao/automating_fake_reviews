@@ -96,8 +96,8 @@ class RNNLM(object):
         self.num_classes = 2
         self.vocab_size = V
         self.embedding_size = H
-        self.filter_sizes = [10, 20, 30, 40, 50]
-        self.num_filters = 5
+        self.filter_sizes = [10, 20, 30, 40, 50, 60]
+        self.num_filters = 6
         
         #CNN Input Placeholders
         self.input_x = tf.placeholder(tf.int32, [None, self.sequence_length], name="input_x")
@@ -454,11 +454,11 @@ class RNNLM(object):
             self.train_step0_ = optimizer0_.apply_gradients(zip(gradients0, v0))
             
         with tf.name_scope("optimizer_and_training_op_for_generator"):
-            var_list = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, "generator")
+            var_list1 = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, "generator")
             #print(var_list)
             #var_list = []
             optimizer1_ = tf.train.AdamOptimizer(learning_rate=self.learning_rate_)
-            gradients1, v1 = zip(*optimizer1_.compute_gradients(self.loss_cnn, var_list=var_list))
+            gradients1, v1 = zip(*optimizer1_.compute_gradients(self.loss_cnn, var_list=var_list1))
             gradients1, _ = tf.clip_by_global_norm(gradients1, self.max_grad_norm_)
             self.train_step1_ = optimizer1_.apply_gradients(zip(gradients1, v1))
         
@@ -474,10 +474,10 @@ class RNNLM(object):
 
         with tf.name_scope("optimizer_and_training_op_for_softmax_layer"):
             #var_list = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, "generator/softmax_output_layer")
-            var_list = [self.W_out_, self.b_out_]
+            var_list2 = [self.W_out_, self.b_out_]
             #print(var_list)
             optimizer2_ = tf.train.AdamOptimizer(learning_rate=self.learning_rate_)
-            gradients2, v2 = zip(*optimizer2_.compute_gradients(self.train_loss_, var_list=var_list))
+            gradients2, v2 = zip(*optimizer2_.compute_gradients(self.train_loss_, var_list=var_list2))
             #gradients, v = zip(*optimizer_.compute_gradients(self.loss_cnn))
             gradients2, _ = tf.clip_by_global_norm(gradients2, self.max_grad_norm_)
             self.train_step_softmax_ = optimizer2_.apply_gradients(zip(gradients2, v2))
