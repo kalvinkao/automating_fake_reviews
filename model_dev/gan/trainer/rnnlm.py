@@ -96,8 +96,8 @@ class RNNLM(object):
         self.num_classes = 2
         self.vocab_size = V
         self.embedding_size = H
-        self.filter_sizes = [15, 20, 25]
-        self.num_filters = 3
+        self.filter_sizes = [10, 20, 30, 40, 50]
+        self.num_filters = 5
         
         #CNN Input Placeholders
         self.input_x = tf.placeholder(tf.int32, [None, self.sequence_length], name="input_x")
@@ -218,72 +218,74 @@ class RNNLM(object):
         # embedding_lookup gives shape (batch_size, N, M)
         #x_ = tf.nn.embedding_lookup(self.W_in_, self.input_w_)
         
-        
-        with tf.name_scope("embedding_layer"):
-            self.W_in_ = tf.get_variable("W_in", shape=[self.V, self.H], 
-                                         initializer = tf.random_uniform_initializer(minval=-1.0, maxval=1.0))
-            self.x_ = tf.nn.embedding_lookup(self.W_in_, self.input_w_)
+        with tf.variable_scope("generator"):
         
         
-
-
-        # Construct RNN/LSTM cell and recurrent layer.
-        with tf.name_scope("recurrent_layer"):
-            self.cell_ = MakeFancyRNNCell(self.H, self.dropout_keep_prob_, self.num_layers)
-            self.initial_h_ = self.cell_.zero_state(self.batch_size_,tf.float32)
-            self.outputs_, self.final_h_ = tf.nn.dynamic_rnn(self.cell_, inputs=self.x_, 
-                                                              sequence_length=self.ns_, initial_state=self.initial_h_,
-                                                       dtype=tf.float32)
-            # 'outputs' is a tensor of shape [batch_size, max_time, H]
-            # 'state' is a N-tuple where N is the number of LSTMCells containing a
-            # tf.contrib.rnn.LSTMStateTuple for each cell
-
-            #print(self.outputs_.get_shape())
-        #self.outputs_, self.final_h_ = tf.nn.dynamic_rnn(self.cell_, inputs=x_, 
-                                                          #sequence_length=self.ns_, initial_state=self.initial_h_,
-                                                   #dtype=tf.float32)
-        
-        #W1_ = tf.Variable(tf.random_normal([N*M,H]), name="W1")
-        #b1_ = tf.Variable(tf.zeros([H,], dtype=tf.float32), name="b1")
-        #h_ = tf.tanh(tf.matmul(x_, W1_) + b1_, name="h")
+            with tf.name_scope("embedding_layer"):
+                self.W_in_ = tf.get_variable("W_in", shape=[self.V, self.H], 
+                                             initializer = tf.random_uniform_initializer(minval=-1.0, maxval=1.0))
+                self.x_ = tf.nn.embedding_lookup(self.W_in_, self.input_w_)
 
 
 
 
+            # Construct RNN/LSTM cell and recurrent layer.
+            with tf.name_scope("recurrent_layer"):
+                self.cell_ = MakeFancyRNNCell(self.H, self.dropout_keep_prob_, self.num_layers)
+                self.initial_h_ = self.cell_.zero_state(self.batch_size_,tf.float32)
+                self.outputs_, self.final_h_ = tf.nn.dynamic_rnn(self.cell_, inputs=self.x_, 
+                                                                  sequence_length=self.ns_, initial_state=self.initial_h_,
+                                                           dtype=tf.float32)
+                # 'outputs' is a tensor of shape [batch_size, max_time, H]
+                # 'state' is a N-tuple where N is the number of LSTMCells containing a
+                # tf.contrib.rnn.LSTMStateTuple for each cell
 
-        # Softmax output layer, over vocabulary. Just compute logits_ here.
-        # Hint: the matmul3d function will be useful here; it's a drop-in
-        # replacement for tf.matmul that will handle the "time" dimension
-        # properly.
-        with tf.name_scope("softmax_output_layer"):
-            self.W_out_ = tf.get_variable("W_out", shape=[self.H, self.V], 
-                                          initializer = tf.random_uniform_initializer(minval=-1.0, maxval=1.0))
-            #tf.get_variable(tf.random_uniform([self.H, self.V], -1.0, 1.0), name="W_out")
+                #print(self.outputs_.get_shape())
+            #self.outputs_, self.final_h_ = tf.nn.dynamic_rnn(self.cell_, inputs=x_, 
+                                                              #sequence_length=self.ns_, initial_state=self.initial_h_,
+                                                       #dtype=tf.float32)
 
-            self.b_out_ = tf.get_variable("b_out", shape=[self.V,], 
-                                          initializer = tf.zeros_initializer())
-            #self.b_out_ = tf.get_variable("b_out", shape=[self.V,], initializer = tf.random_uniform_initializer(minval=-1.0, maxval=1.0))
-            #tf.get_variable(tf.random_uniform([self.V,], -1.0, 1.0), name="b_out")
-
-            self.logits_ = tf.add(matmul3d(self.outputs_, self.W_out_), self.b_out_, name="logits")
-            #print(self.logits_.get_shape())
+            #W1_ = tf.Variable(tf.random_normal([N*M,H]), name="W1")
+            #b1_ = tf.Variable(tf.zeros([H,], dtype=tf.float32), name="b1")
+            #h_ = tf.tanh(tf.matmul(x_, W1_) + b1_, name="h")
 
 
 
-        # Loss computation (true loss, for prediction)
-        with tf.name_scope("loss_computation"):
-            per_example_loss_ = tf.nn.sparse_softmax_cross_entropy_with_logits(labels=self.target_y_, 
-                                                                               logits=self.logits_, 
-                                                                               name="per_example_loss")
-            self.loss_ = tf.reduce_mean(per_example_loss_, name="loss")
+
+
+            # Softmax output layer, over vocabulary. Just compute logits_ here.
+            # Hint: the matmul3d function will be useful here; it's a drop-in
+            # replacement for tf.matmul that will handle the "time" dimension
+            # properly.
+            with tf.name_scope("softmax_output_layer"):
+                self.W_out_ = tf.get_variable("W_out", shape=[self.H, self.V], 
+                                              initializer = tf.random_uniform_initializer(minval=-1.0, maxval=1.0))
+                #tf.get_variable(tf.random_uniform([self.H, self.V], -1.0, 1.0), name="W_out")
+
+                self.b_out_ = tf.get_variable("b_out", shape=[self.V,], 
+                                              initializer = tf.zeros_initializer())
+                #self.b_out_ = tf.get_variable("b_out", shape=[self.V,], initializer = tf.random_uniform_initializer(minval=-1.0, maxval=1.0))
+                #tf.get_variable(tf.random_uniform([self.V,], -1.0, 1.0), name="b_out")
+
+                self.logits_ = tf.add(matmul3d(self.outputs_, self.W_out_), self.b_out_, name="logits")
+                #print(self.logits_.get_shape())
+
+
+
+            # Loss computation (true loss, for prediction)
+            with tf.name_scope("loss_computation"):
+                per_example_loss_ = tf.nn.sparse_softmax_cross_entropy_with_logits(labels=self.target_y_, 
+                                                                                   logits=self.logits_, 
+                                                                                   name="per_example_loss")
+                self.loss_ = tf.reduce_mean(per_example_loss_, name="loss")
 
 
 
         ## CNN
-        lstm_c, lstm_h = self.final_h_
-        print(lstm_h.get_shape)
+        #lstm_c, lstm_h = self.final_h_
+        #print(lstm_h.get_shape)
         #lstm_h[:1, :]
-        self.input_x = lstm_h
+        #self.input_x = lstm_h
         
         # 'outputs' is a tensor of shape [batch_size, max_time, H]
         # 'state' is a N-tuple where N is the number of LSTMCells containing a
@@ -292,67 +294,70 @@ class RNNLM(object):
         #self.input_x = tf.placeholder(tf.int32, [None, self.sequence_length], name="input_x")
         #self.input_y = tf.placeholder(tf.float32, [None, self.num_classes], name="input_y")
         
-        #SKIP CNN EMBEDDING LAYER
-        #with tf.name_scope("cnn_embedding_layer"):
-            #W = tf.Variable(tf.random_uniform([self.vocab_size, self.embedding_size], -1.0, 1.0), name="W_cnn")
-            #self.embedded_chars = tf.nn.embedding_lookup(W, self.input_x)
-            #self.embedded_chars_expanded = tf.expand_dims(self.embedded_chars, -1)
-        
-        #self.embedded_chars_expanded = self.outputs_
-        self.embedded_chars_expanded = tf.expand_dims(self.outputs_, -1)
-        
-        # Convolution and Max-Pooling Layers for CNN
-        pooled_outputs = []
-        for i, filter_size in enumerate(self.filter_sizes):
-            with tf.name_scope("conv-maxpool-%s" % filter_size):
-                # Convolution Layer
-                filter_shape = [filter_size, self.embedding_size, 1, self.num_filters]
-                W = tf.Variable(tf.truncated_normal(filter_shape, stddev=0.1), name="W")
-                b = tf.Variable(tf.constant(0.1, shape=[self.num_filters]), name="b")
-                conv = tf.nn.conv2d(
-                    self.embedded_chars_expanded,
-                    W,
-                    strides=[1, 1, 1, 1],
-                    padding="VALID",
-                    name="conv")
-                # Apply nonlinearity
-                h = tf.nn.relu(tf.nn.bias_add(conv, b), name="relu")
-                # Max-pooling over the outputs
-                pooled = tf.nn.max_pool(
-                    h,
-                    ksize=[1, self.sequence_length - filter_size + 1, 1, 1],
-                    strides=[1, 1, 1, 1],
-                    padding='VALID',
-                    name="pool")
-                pooled_outputs.append(pooled)
-         
-        # Combine all the pooled features
-        num_filters_total = self.num_filters * len(self.filter_sizes)
-        #self.h_pool = tf.concat(3, pooled_outputs)
-        self.h_pool = tf.concat(pooled_outputs, 3)
-        self.h_pool_flat = tf.reshape(self.h_pool, [-1, num_filters_total])
-        
-        # Add dropout
-        with tf.name_scope("dropout"):
-            self.h_drop = tf.nn.dropout(self.h_pool_flat, self.dropout_keep_prob_)
+        with tf.variable_scope("discriminator"):
+            #SKIP CNN EMBEDDING LAYER
+            #with tf.name_scope("cnn_embedding_layer"):
+                #W = tf.Variable(tf.random_uniform([self.vocab_size, self.embedding_size], -1.0, 1.0), name="W_cnn")
+                #self.embedded_chars = tf.nn.embedding_lookup(W, self.input_x)
+                #self.embedded_chars_expanded = tf.expand_dims(self.embedded_chars, -1)
 
-        # Classify with CNN
-        with tf.name_scope("output"):
-            W = tf.Variable(tf.truncated_normal([num_filters_total, self.num_classes], stddev=0.1), name="W")
-            b = tf.Variable(tf.constant(0.1, shape=[self.num_classes]), name="b")
-            self.scores = tf.nn.xw_plus_b(self.h_drop, W, b, name="scores")
-            self.predictions = tf.argmax(self.scores, 1, name="predictions")
-        
-        # Calculate CNN mean cross-entropy loss
-        with tf.name_scope("loss"):
-            #losses = tf.nn.softmax_cross_entropy_with_logits(self.scores, self.input_y)
-            losses = tf.nn.softmax_cross_entropy_with_logits(labels=self.input_y, logits=self.scores)
-            self.loss_cnn = tf.reduce_mean(losses)
-            
-        # Calculate CNN Accuracy
-        with tf.name_scope("accuracy"):
-            correct_predictions = tf.equal(self.predictions, tf.argmax(self.input_y, 1))
-            self.accuracy = tf.reduce_mean(tf.cast(correct_predictions, "float"), name="accuracy")
+            #self.embedded_chars_expanded = self.outputs_
+            self.embedded_chars_expanded = tf.expand_dims(self.outputs_, -1)
+
+            # Convolution and Max-Pooling Layers for CNN
+            pooled_outputs = []
+            for i, filter_size in enumerate(self.filter_sizes):
+                with tf.name_scope("conv-maxpool-%s" % filter_size):
+                    # Convolution Layer
+                    filter_shape = [filter_size, self.embedding_size, 1, self.num_filters]
+                    self.W_conv_ = tf.Variable(tf.truncated_normal(filter_shape, stddev=0.1), name="W_conv")
+                    self.b_conv_ = tf.Variable(tf.constant(0.1, shape=[self.num_filters]), name="b_conv")
+                    conv = tf.nn.conv2d(
+                        self.embedded_chars_expanded,
+                        self.W_conv_,
+                        strides=[1, 1, 1, 1],
+                        padding="VALID",
+                        name="conv")
+                    # Apply nonlinearity
+                    h = tf.nn.relu(tf.nn.bias_add(conv, self.b_conv_), name="relu")
+                    # Max-pooling over the outputs
+                    pooled = tf.nn.max_pool(
+                        h,
+                        ksize=[1, self.sequence_length - filter_size + 1, 1, 1],
+                        strides=[1, 1, 1, 1],
+                        padding='VALID',
+                        name="pool")
+                    pooled_outputs.append(pooled)
+
+            # Combine all the pooled features
+            num_filters_total = self.num_filters * len(self.filter_sizes)
+            #self.h_pool = tf.concat(3, pooled_outputs)
+            self.h_pool = tf.concat(pooled_outputs, 3)
+            self.h_pool_flat = tf.reshape(self.h_pool, [-1, num_filters_total])
+
+            # Add dropout
+            with tf.name_scope("dropout"):
+                self.h_drop = tf.nn.dropout(self.h_pool_flat, self.dropout_keep_prob_)
+
+            # Classify with CNN
+            with tf.name_scope("output"):
+                self.W_cnn_out_ = tf.Variable(tf.truncated_normal([num_filters_total, self.num_classes], stddev=0.1), name="W_cnn_out")
+                self.b_cnn_out_ = tf.Variable(tf.constant(0.1, shape=[self.num_classes]), name="b_cnn_out")
+                self.scores = tf.nn.xw_plus_b(self.h_drop, self.W_cnn_out_, self.b_cnn_out_, name="scores")
+                self.predictions = tf.argmax(self.scores, 1, name="predictions")
+
+            # Calculate CNN mean cross-entropy loss
+            with tf.name_scope("loss"):
+                #losses = tf.nn.softmax_cross_entropy_with_logits(self.scores, self.input_y)
+                losses = tf.nn.softmax_cross_entropy_with_logits(labels=self.input_y, logits=self.scores)
+                self.loss_cnn = tf.reduce_mean(losses)
+                #manually calculate generator loss
+                #self.gen_loss_ = 
+
+            # Calculate CNN Accuracy
+            with tf.name_scope("accuracy"):
+                correct_predictions = tf.equal(self.predictions, tf.argmax(self.input_y, 1))
+                self.accuracy = tf.reduce_mean(tf.cast(correct_predictions, "float"), name="accuracy")
         #### END(YOUR CODE) ####
 
     @with_self_graph
@@ -442,21 +447,35 @@ class RNNLM(object):
         #self.train_step_ = optimizer_.apply_gradients(zip(grads, tvars))
         #gradient clipping: tf.clip_by_global_norm, self.max_grad_norm
         #self.train_step_ = optimizer_.minimize(self.train_loss_)
-        with tf.name_scope("optimizer_and_training_op"):
+        with tf.name_scope("optimizer_and_training_op_for_pretraining"):
             optimizer0_ = tf.train.AdamOptimizer(learning_rate=self.learning_rate_)
             gradients0, v0 = zip(*optimizer0_.compute_gradients(self.train_loss_))
             gradients0, _ = tf.clip_by_global_norm(gradients0, self.max_grad_norm_)
             self.train_step0_ = optimizer0_.apply_gradients(zip(gradients0, v0))
+            
+        with tf.name_scope("optimizer_and_training_op_for_generator"):
+            var_list = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, "generator")
+            #print(var_list)
+            #var_list = []
+            optimizer1_ = tf.train.AdamOptimizer(learning_rate=self.learning_rate_)
+            gradients1, v1 = zip(*optimizer1_.compute_gradients(self.loss_cnn, var_list=var_list))
+            gradients1, _ = tf.clip_by_global_norm(gradients1, self.max_grad_norm_)
+            self.train_step1_ = optimizer1_.apply_gradients(zip(gradients1, v1))
         
-        with tf.name_scope("optimizer_and_training_op_for_cnn"):
+        with tf.name_scope("optimizer_and_training_op_for_discriminator"):
+            var_list = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, "discriminator")
+            #print(var_list)
+            #var_list = [self.W_conv_, self.b_conv_, self.W_cnn_out_, self.b_cnn_out_]
             optimizer_ = tf.train.AdamOptimizer(learning_rate=self.learning_rate_)
             #gradients, v = zip(*optimizer_.compute_gradients(self.train_loss_))
-            gradients, v = zip(*optimizer_.compute_gradients(self.loss_cnn))
+            gradients, v = zip(*optimizer_.compute_gradients(self.loss_cnn, var_list=var_list))
             gradients, _ = tf.clip_by_global_norm(gradients, self.max_grad_norm_)
             self.train_step_ = optimizer_.apply_gradients(zip(gradients, v))
 
         with tf.name_scope("optimizer_and_training_op_for_softmax_layer"):
+            #var_list = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, "generator/softmax_output_layer")
             var_list = [self.W_out_, self.b_out_]
+            #print(var_list)
             optimizer2_ = tf.train.AdamOptimizer(learning_rate=self.learning_rate_)
             gradients2, v2 = zip(*optimizer2_.compute_gradients(self.train_loss_, var_list=var_list))
             #gradients, v = zip(*optimizer_.compute_gradients(self.loss_cnn))
