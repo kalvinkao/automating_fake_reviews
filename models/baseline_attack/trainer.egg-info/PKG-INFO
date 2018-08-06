@@ -1,7 +1,7 @@
 Metadata-Version: 1.0
 Name: trainer
-Version: 0.3.0
-Summary: baseline attack training package
+Version: 0.3.2
+Summary: baseline attack training package with saving 10 epochs
 Home-page: UNKNOWN
 Author: UNKNOWN
 Author-email: UNKNOWN
