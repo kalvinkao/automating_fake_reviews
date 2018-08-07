@@ -474,8 +474,10 @@ start_dl = time.time()
 #os.system('gsutil -q cp gs://w266_final_project_kk/data/split01_test_data_02.csv .')
 #os.system('gsutil -q cp gs://w266_final_project_kk/data/gen01_train_data_01.csv .')
 #os.system('gsutil -q cp gs://w266_final_project_kk/data/gen01_test_data_01.csv .')
-os.system('gsutil -q cp gs://w266_final_project_kk/data/gen01_test_data_01_a.csv .')
-os.system('gsutil -q cp gs://w266_final_project_kk/data/gen01_test_data_01_b.csv .')
+#os.system('gsutil -q cp gs://w266_final_project_kk/data/gen01_test_data_01_a.csv .')
+#os.system('gsutil -q cp gs://w266_final_project_kk/data/gen01_test_data_01_b.csv .')
+os.system('gsutil -q cp gs://w266_final_project_kk/data/maxtime300_test_data_01.csv .')
+os.system('gsutil -q cp gs://w266_final_project_kk/data/maxtime75_test_data_01.csv .')
 os.system('mkdir /tmp/defense_baseline_real/')
 os.system('mkdir /tmp/defense_baseline_artificial/')
 os.system('gsutil -q cp gs://w266_final_project_kk/defense_baseline/real/1533420684/* /tmp/defense_baseline_real')
@@ -484,9 +486,9 @@ end_dl = time.time()
 print("data download took " + str(end_dl-start_dl) + " seconds")
 #gsutil cp gs://[BUCKET_NAME]/[OBJECT_NAME] [OBJECT_DESTINATION]
 #real_train_review_path = './split01_train_data_02.csv'
-real_test_review_path = './gen01_test_data_01_a.csv'
+real_test_review_path = './maxtime300_test_data_01.csv'
 #artificial_train_review_path = './gen01_train_data_01.csv'
-artificial_test_review_path = './gen01_test_data_01_b.csv'
+artificial_test_review_path = './maxtime75_test_data_01.csv'
 
 trained_filename_real = "/tmp/defense_baseline_real/rnnlm_trained"
 trained_filename_artificial = "/tmp/defense_baseline_artificial/rnnlm_trained"
@@ -581,8 +583,8 @@ predictions_real = np.array(predictions_real)
 predictions_artificial = np.array(predictions_artificial)
 np.savetxt("predictions_real.csv", predictions_real, delimiter=",")
 np.savetxt("predictions_artificial.csv", predictions_artificial, delimiter=",")
-os.system("gsutil cp predictions_real.csv gs://w266_final_project_kk/defense_baseline_analysis_01/predictions_real/")
-os.system("gsutil cp predictions_artificial.csv gs://w266_final_project_kk/defense_baseline_analysis_01/predictions_artificial/")
+os.system("gsutil cp predictions_real.csv gs://w266_final_project_kk/defense_baseline_analysis_02/predictions_real/")
+os.system("gsutil cp predictions_artificial.csv gs://w266_final_project_kk/defense_baseline_analysis_02/predictions_artificial/")
 #os.system("gsutil cp predictions_real.csv gs://w266_final_project_kk/practice_run/defense_predictions_real/")
 #os.system("gsutil cp predictions_artificial.csv gs://w266_final_project_kk/practice_run/defense_predictions_artificial/")
 ### UPDATED!!!
