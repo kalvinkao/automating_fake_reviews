@@ -18,9 +18,9 @@ REQUIRED_PACKAGES = [
 
 setup(
     name='trainer',
-    version='0.3.4',
+    version='0.3.1',
     install_requires=REQUIRED_PACKAGES,
     packages=find_packages(),
     include_package_data=True,
-    description='baseline attack training package 10 epochs maxtime 300'
+    description='baseline attack training package 20 epochs maxtime 150'
 )
