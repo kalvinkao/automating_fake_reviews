@@ -1,7 +1,7 @@
 Metadata-Version: 1.0
 Name: trainer
-Version: 0.3.7
-Summary: baseline attack training package 10 epochs maxtime 600
+Version: 0.3.8
+Summary: baseline attack training package 10 epochs maxtime 500
 Home-page: UNKNOWN
 Author: UNKNOWN
 Author-email: UNKNOWN
