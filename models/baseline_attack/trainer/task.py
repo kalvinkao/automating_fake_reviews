@@ -431,12 +431,12 @@ print("vocabulary building took " + str(end_vocab-start_vocab) + " seconds")
 
 start_training = time.time()
 model_params = dict(V=len(words_to_ids.keys()), H=1024, softmax_ns=len(words_to_ids.keys()), num_layers=2)
-trained_filename = run_training(train_ids, test_ids, tf_savedir = "/tmp/artificial_hotel_reviews/a4_model", model_params=model_params, max_time=600, batch_size=256, learning_rate=0.002, num_epochs=10)
+trained_filename = run_training(train_ids, test_ids, tf_savedir = "/tmp/artificial_hotel_reviews/a4_model", model_params=model_params, max_time=500, batch_size=256, learning_rate=0.002, num_epochs=10)
 end_training = time.time()
 print("overall training took " + str(end_training-start_training) + " seconds")
 
 #save the RNN for later use
-save_command_1  = "gsutil cp -r " + trained_filename[0:trained_filename.rfind("/")] + " gs://w266_final_project_kk/attack_baseline/10_epochs_maxtime_600/" + str(int(np.floor(time.time())))
+save_command_1  = "gsutil cp -r " + trained_filename[0:trained_filename.rfind("/")] + " gs://w266_final_project_kk/attack_baseline/10_epochs_maxtime_500/" + str(int(np.floor(time.time())))
 os.system(save_command_1)
 
 start_sampling = time.time()
