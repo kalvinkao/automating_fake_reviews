@@ -476,8 +476,9 @@ start_dl = time.time()
 #os.system('gsutil -q cp gs://w266_final_project_kk/data/gen01_test_data_01.csv .')
 #os.system('gsutil -q cp gs://w266_final_project_kk/data/gen01_test_data_01_a.csv .')
 #os.system('gsutil -q cp gs://w266_final_project_kk/data/gen01_test_data_01_b.csv .')
-os.system('gsutil -q cp gs://w266_final_project_kk/data/maxtime300_test_data_01.csv .')
-os.system('gsutil -q cp gs://w266_final_project_kk/data/maxtime75_test_data_01.csv .')
+#os.system('gsutil -q cp gs://w266_final_project_kk/data/maxtime300_test_data_01.csv .')
+#os.system('gsutil -q cp gs://w266_final_project_kk/data/maxtime75_test_data_01.csv .')
+os.system('gsutil -q cp gs://w266_final_project_kk/data/maxtime500_test_data_01.csv .')
 os.system('mkdir /tmp/defense_baseline_real/')
 os.system('mkdir /tmp/defense_baseline_artificial/')
 os.system('gsutil -q cp gs://w266_final_project_kk/defense_baseline/real/1533420684/* /tmp/defense_baseline_real')
@@ -486,9 +487,10 @@ end_dl = time.time()
 print("data download took " + str(end_dl-start_dl) + " seconds")
 #gsutil cp gs://[BUCKET_NAME]/[OBJECT_NAME] [OBJECT_DESTINATION]
 #real_train_review_path = './split01_train_data_02.csv'
-real_test_review_path = './maxtime300_test_data_01.csv'
+#real_test_review_path = './maxtime300_test_data_01.csv'
 #artificial_train_review_path = './gen01_train_data_01.csv'
-artificial_test_review_path = './maxtime75_test_data_01.csv'
+#artificial_test_review_path = './maxtime75_test_data_01.csv'
+artificial_test_review_path = './maxtime500_test_data_01.csv'
 
 trained_filename_real = "/tmp/defense_baseline_real/rnnlm_trained"
 trained_filename_artificial = "/tmp/defense_baseline_artificial/rnnlm_trained"
@@ -503,11 +505,11 @@ start_open = time.time()
     #reader = csv.reader(csvfile, delimiter=',')
     #training_review_list_real = [item for sublist in reader for item in sublist]
 
-with open(real_test_review_path, 'r') as csvfile:
-    reader = csv.reader(csvfile, delimiter=',')
-    test_review_list_real = [sublist for sublist in reader]
+#with open(real_test_review_path, 'r') as csvfile:
+    #reader = csv.reader(csvfile, delimiter=',')
+    #test_review_list_real = [sublist for sublist in reader]
     #make into list of list
-test_review_list_real_training_eval = [item for sublist in test_review_list_real for item in sublist]
+#test_review_list_real_training_eval = [item for sublist in test_review_list_real for item in sublist]
 
 #with open(artificial_train_review_path, 'r') as csvfile:
     #reader = csv.reader(csvfile, delimiter=',')
@@ -523,10 +525,13 @@ print("data reading took " + str(end_open-start_open) + " seconds")
 
 start_vocab = time.time()
 #words_to_ids, ids_to_words = make_vocabulary([training_review_list_real, test_review_list_real_training_eval, training_review_list_artificial, test_review_list_artificial_training_eval])
-words_to_ids, ids_to_words = make_vocabulary([test_review_list_real_training_eval, test_review_list_artificial_training_eval])
+#words_to_ids, ids_to_words = make_vocabulary([test_review_list_real_training_eval, test_review_list_artificial_training_eval])
+words_to_ids, ids_to_words = make_vocabulary([test_review_list_artificial_training_eval])
 #train_ids_real = convert_to_ids(words_to_ids, training_review_list_real)
-test_ids_real = [convert_to_ids(words_to_ids, review) for review in test_review_list_real]
-test_ids_real_training_eval = convert_to_ids(words_to_ids, test_review_list_real_training_eval)
+
+#test_ids_real = [convert_to_ids(words_to_ids, review) for review in test_review_list_real]
+#test_ids_real_training_eval = convert_to_ids(words_to_ids, test_review_list_real_training_eval)
+
 #train_ids_artificial = convert_to_ids(words_to_ids, training_review_list_artificial)
 test_ids_artificial = [convert_to_ids(words_to_ids, review) for review in test_review_list_artificial]
 test_ids_artificial_training_eval = convert_to_ids(words_to_ids, test_review_list_artificial_training_eval)
@@ -539,7 +544,7 @@ model_params = dict(V=len(words_to_ids.keys()), H=1024, softmax_ns=len(words_to_
 #trained_filename_artificial = run_training(train_ids_artificial, test_ids_artificial_training_eval, tf_savedir = "/tmp/defense_model/artificial", model_params=model_params, max_time=150, batch_size=128, learning_rate=0.002, num_epochs=20)
 #trained_filename_real = run_training(train_ids_real[:len(train_ids_artificial)], test_ids_real_training_eval[:1000000], tf_savedir = "/tmp/defense_model/real", model_params=model_params, max_time=150, batch_size=128, learning_rate=0.002, num_epochs=20)#UPDATE FOR ACTUAL RUN
 #trained_filename_artificial = run_training(train_ids_artificial, test_ids_artificial_training_eval[:1000000], tf_savedir = "/tmp/defense_model/artificial", model_params=model_params, max_time=150, batch_size=128, learning_rate=0.002, num_epochs=20)#UPDATE FOR ACTUAL RUN
-end_training = time.time()
+#end_training = time.time()
 #print("overall training took " + str(end_training-start_training) + " seconds")
 print("no training")
 
@@ -564,9 +569,9 @@ print("no sampling")
 #first feed the real reviews into each RNN and get the softmax probability of each character
 #get the classification for real reviews by forming an average negative log-likelihood ratio for each review
 start_scoring = time.time()
-test_likelihoods_real_from_real = get_char_probs(trained_filename_real, model_params, test_ids_real[:1000])
-test_likelihoods_real_from_artificial = get_char_probs(trained_filename_artificial, model_params, test_ids_real[:1000])
-predictions_real = neg_log_lik_ratio(test_likelihoods_real_from_real, test_likelihoods_real_from_artificial)
+#test_likelihoods_real_from_real = get_char_probs(trained_filename_real, model_params, test_ids_real[:1000])
+#test_likelihoods_real_from_artificial = get_char_probs(trained_filename_artificial, model_params, test_ids_real[:1000])
+#predictions_real = neg_log_lik_ratio(test_likelihoods_real_from_real, test_likelihoods_real_from_artificial)
 #negative_log_lik_ratios = -1*(np.log(np.divide(test_likelihoods_real_from_real, test_likelihoods_real_from_artificial)))
 #predictor = 
 
@@ -579,12 +584,12 @@ end_scoring = time.time()
 print("review scoring took " + str(end_scoring-start_scoring) + " seconds")
 
 ### UPDATED!!!
-predictions_real = np.array(predictions_real)
+#predictions_real = np.array(predictions_real)
 predictions_artificial = np.array(predictions_artificial)
-np.savetxt("predictions_real.csv", predictions_real, delimiter=",")
+#np.savetxt("predictions_real.csv", predictions_real, delimiter=",")
 np.savetxt("predictions_artificial.csv", predictions_artificial, delimiter=",")
-os.system("gsutil cp predictions_real.csv gs://w266_final_project_kk/defense_baseline_analysis_02/predictions_real/")
-os.system("gsutil cp predictions_artificial.csv gs://w266_final_project_kk/defense_baseline_analysis_02/predictions_artificial/")
+#os.system("gsutil cp predictions_real.csv gs://w266_final_project_kk/defense_baseline_analysis_03/predictions_real/")
+os.system("gsutil cp predictions_artificial.csv gs://w266_final_project_kk/defense_baseline_analysis_05/predictions_artificial/")
 #os.system("gsutil cp predictions_real.csv gs://w266_final_project_kk/practice_run/defense_predictions_real/")
 #os.system("gsutil cp predictions_artificial.csv gs://w266_final_project_kk/practice_run/defense_predictions_artificial/")
 ### UPDATED!!!

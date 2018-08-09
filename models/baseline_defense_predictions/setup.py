@@ -18,9 +18,9 @@ REQUIRED_PACKAGES = [
 
 setup(
     name='trainer',
-    version='1.1.2',
+    version='1.1.5',
     install_requires=REQUIRED_PACKAGES,
     packages=find_packages(),
     include_package_data=True,
-    description='baseline defense prediction package 01'
+    description='baseline defense prediction package for max time 500'
 )
