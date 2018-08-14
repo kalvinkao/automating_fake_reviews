@@ -1,4 +1,4 @@
 # Automating Fake Online Reviews
-This project was built for a Natural Language Processing course in my master's program-- please find the final report [here](https://github.com/kalvinkao/artificial_hotel_reviews/blob/master/Automating%20Fake%20Online%20Reviews.pdf).
+This project was built for a Natural Language Processing course in my master's program-- please find the final report [here](blob/master/Automating%20Fake%20Online%20Reviews.pdf).
 
-Since I am still working full-time while in school part-time, I am unsure if and when I can clean up the code to be more presentable.  My Google Cloud ML Engine training packages are located in the 'models' folder.
+My final training packages (code with tensorflow) are located in the 'models' folder.  Since I am still working full-time, it may take me some time to reorganize these folders and clean up their notebooks and code.
